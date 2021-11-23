@@ -1,5 +1,7 @@
 # 3005-project
 
+## To Run, go to the lib folder and type `ruby BookStore.rb`
+
 ERD = [clickhere](https://lucid.app/lucidchart/de6a2589-42c8-468a-8acc-529cf19793f1/edit?viewport_loc=212%2C540%2C1322%2C1438%2C0_0&invitationId=inv_d010b32b-9e95-4111-973a-eca13a482d85)
 
 
