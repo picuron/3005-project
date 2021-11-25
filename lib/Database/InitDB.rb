@@ -17,7 +17,7 @@ module Database
       begin
 
         con = PG.connect :dbname => 'testdb', :user => 'postgres', 
-            :password => 'Insert Password Here'
+            :password => ''
     
         user = con.user
         db_name = con.db
