@@ -2,7 +2,6 @@ require './Database/InitDB'
 require './Client/ClientController'
 require './Owner/OwnerController'
 
-# This class should be the starting point. The program is launched from in here, and then user flow begins from this class.
 class BookStoreController
 
     def initalize
