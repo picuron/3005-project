@@ -2,6 +2,7 @@ require './Database/InitDB'
 require './Client/ClientController'
 require './Owner/OwnerController'
 
+# After the program is launched, the user instantly gets pointed here
 class BookStoreController
 
     def initalize
@@ -9,7 +10,6 @@ class BookStoreController
         prompt_for_db_clearing
         puts
         prompt_for_owner_or_controller
-
     end
 
     private
@@ -41,7 +41,6 @@ class BookStoreController
 
     def prompt_for_db_clearing
         Database::InitDB.new.initalize if should_init_db?
-
     end
     
     def should_init_db?
