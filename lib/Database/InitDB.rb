@@ -27,6 +27,17 @@ module Database
         puts "Database name: #{db_name}"
         # puts "Password: #{pswd}" 
         
+        sql = File.read("put the full url here")
+        puts sql
+        con.exec(sql)
+        # with_db do |db|
+        #   begin
+        #     db.exec(sql)
+        #   rescue PG::Error  => e
+        #     puts e.message
+        #   end
+        # end
+        
         rescue PG::Error => e
         
             puts e.message 
