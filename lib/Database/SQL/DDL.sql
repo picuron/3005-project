@@ -114,3 +114,18 @@ create table prereq
 	 foreign key (prereq_id) references course
 	);
 
+
+
+
+
+
+
+
+-- KEEP THIS ONE, WE MAY ACTUALLY USE IT --
+CREATE TABLE person
+(
+  p_ID  varchar(10),
+  name  varchar(50),
+  owner boolean,
+  primary key (p_ID)
+);
