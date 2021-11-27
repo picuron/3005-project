@@ -1,62 +1,80 @@
 module Client
   class ClientController
       
-      def initalize(sessionObjectIn)
+      def initalize(session_object_in)
+        @session_object_in = session_object_in
+
+        puts "\e[2J\e[f"
         message
-        main(sessionObjectIn)
+        execute
       end
 
+      private
+
       #takes in a sessionObject, returns a connectionObject
-      def dbConnectionOpen(sessionObjectIn)
+      def db_connection_open
         begin 
-          connectionObject = PG.connect( 
-            :dbname => sessionObjectIn.db_name, 
-            :user => sessionObjectIn.username, 
-            :password => sessionObjectIn.password
+          connection_object = PG.connect( 
+            :dbname => @session_object_in.db_name, 
+            :user => @session_object_in.username, 
+            :password => @session_object_in.password
           )
-        return connectionObject
+        return connection_object
         rescue PG::Error => e
           puts e.message 
         end 
       end
 
       #takes in a connectionObject, closes the connection
-      def dbConnectionClose(connectionObjectIn)
-        if connectionObjectIn 
-          connectionObjectIn.close
+      def db_connection_close(connection_object_in)
+        if connection_object_in 
+          connection_object_in.close
         end
       end
 
       #main control, takes sessionObject, loops through client options
-      def main(sessionObjectIn)
-        loop do
-          puts "Welcome to the BookStore, What would you like to Do? \n"\
-          "[1] - loop again\n"\
-          "[2] - exit\n"\
-          "[3] - get DB printout of all courses names\n"\
-          "[4] - get DB printout of all course details\n"
+      def execute
+        while true
+          puts "\nWelcome to the BookStore, What would you like to Do? \n"\
+          "[1] - exit\n"\
+          "[2] - get DB printout of all courses names\n"\
+          "[3] - get DB printout of all course details\n"
+
           input = gets.chomp
-          if input == "1"
-            puts "OK\n"
-          elsif input == "3"
-            connectionObject = dbConnectionOpen(sessionObjectIn)
-            puts connectionObject.exec('SELECT title FROM course').values
-            dbConnectionClose(connectionObject)
-          elsif input == "4"
-            connectionObject = dbConnectionOpen(sessionObjectIn)
-            puts connectionObject.exec('SELECT * FROM course').values
-            dbConnectionClose(connectionObject)
+          case input
+          when '1'
+            bye_ascii
+            exit
+          when '2'
+            connection_object = db_connection_open
+            puts connection_object.exec('SELECT title FROM course').values
+            db_connection_close(connection_object)
+          when '3'
+            connection_object = db_connection_open
+            puts connection_object.exec('SELECT * FROM course').values
+            db_connection_close(connection_object)
           else
-            break
+            puts "\nInvalid Input. Please try again and enter a valid number. \n"
           end
         end 
       end
 
-      private
+      def bye_ascii
+        puts "\e[2J\e[f"
+        puts <<-'EOF'   
+            __              _          
+          |  _ \           | |
+          | |_) |_   _  ___| |
+          |  _ <| | | |/ _ \ |
+          | |_) | |_| |  __/_|
+          |____/ \__, |\___(_)
+                  __/ |       
+                |___/        
+        EOF
+      end
 
       def message
         puts "In Client Controller"
       end
   end
 end
-  

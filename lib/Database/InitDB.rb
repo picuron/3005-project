@@ -58,23 +58,19 @@ module Database
 
     def generate_all_tables(connection)
       puts "--- Generating All Tables ---"
-      connection.exec(File.read("/Users/joshuakline/Desktop/Fall_2021/COMP3005/Project/src/3005-project/lib/Database/SQL/DDL.sql"))
+      connection.exec(File.read("./Database/SQL/DDL.sql"))
       puts "--- All Tables Generated ---"
     end
 
     def populate_all_tables(connection)
       puts "--- Populating All Tables ---"
-      connection.exec(File.read("/Users/joshuakline/Desktop/Fall_2021/COMP3005/Project/src/3005-project/lib/Database/SQL/RelationsInsert.sql"))
+      connection.exec(File.read("./Database/SQL/RelationsInsert.sql"))
       puts "--- All Tables Populated ---"
     end
-
+    
     def init_db(db_session)
       begin 
-        con = PG.connect( 
-          :dbname => db_session.db_name, 
-          :user => db_session.username, 
-          :password => db_session.password
-        )
+        con = db_connection_open(db_session)
 
         drop_all_tables(con)
         generate_all_tables(con)
@@ -89,6 +85,19 @@ module Database
       end
     end
 
+    def db_connection_open(db_session)
+      begin 
+        connectionObject = PG.connect( 
+          :dbname => db_session.db_name, 
+          :user => db_session.username, 
+          :password => db_session.password
+        )
+      return connectionObject
+      rescue PG::Error => e
+        puts e.message 
+      end 
+    end
+
     def connect_to_db
       emptySession = true
       while emptySession
@@ -100,16 +109,16 @@ module Database
           puts "Password: "
 
           password = STDIN.noecho(&:gets).chomp
-          con = PG.connect( 
-            :dbname => db_name, 
-            :user => username, 
-            :password => password
-          )
 
           db_session = DBSession.new(db_name, username, password)
+
+          con = db_connection_open(db_session)
+
           if db_session
-            emtySession = false 
+            emptySession = false 
           end
+
+          puts "\e[2J\e[fDatabase connection success!"
           return db_session
           rescue PG::Error => e
               puts "\nSorry, but there is no match for that db_name, user_name, and password.\n"\
