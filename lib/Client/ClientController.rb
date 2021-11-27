@@ -38,7 +38,12 @@ module Client
           puts "\nWelcome to the BookStore, What would you like to Do? \n"\
           "[1] - exit\n"\
           "[2] - get DB printout of all courses names\n"\
-          "[3] - get DB printout of all course details\n"
+          "[3] - get DB printout of all course details\n"\
+          "the rest of these are real and will be implemented\n"\
+          "[4] - Browse Books\n"\
+          "[5] - Search for Book\n"\
+          "[6] - View Cart\n"\
+          "[7] - View Orders\n"
 
           input = gets.chomp
           case input
@@ -53,6 +58,64 @@ module Client
             connection_object = db_connection_open
             puts connection_object.exec('SELECT * FROM course').values
             db_connection_close(connection_object)
+          when '4'
+            puts "Here are all our books\n"
+          when '5'
+            while true
+            puts "What would you like to seach By?\n"\
+            "[1] - Book Name\n"\
+            "[2] - Author Name\n"\
+            "[3] - ISBN# \n"\
+            "[4] - Genre \n"
+            "[5] - Return To Main Menu \n"
+
+            input = gets.chomp
+            case input
+            when '1'
+              puts "Here are all of books by book_name"
+            when '2' 
+              puts "Here are all of the books by author name"
+            when '3'
+              puts "Here are all of the books by ISBN#"
+            when '4'
+              puts "Here are all of the Books by genre"
+            when '5'
+              exit
+            else 
+              puts "\nInvalid Input. Please try again and enter a valid number. \n"
+            end
+          when '6'
+            while true
+            puts "Here is everything in your Cart\n"\
+            "...contents of cart...\n"\
+            "What would you like to do?\n"\
+            "[1] - Proceed to Checkout\n"\
+            "[2] - Remove Books From Cart\n"\
+            "[3] - Return To Main Menu \n"
+
+            input = gets.chomp
+            case input
+            when '1'
+              puts "Proceeding To Checkout ...."
+              exit
+            when '2' 
+              array_of_ISBNs_to_remove = []
+              puts "Please Enter the ISBN for the book to want to remove, followed by enter.\n"\
+              "Do not include spaces or commas\n"\
+              "Enter \'0\' and Press Submit when you are done\n"\
+              while true
+                input = gets.chomp
+                case input
+                when '0'
+                  exit
+                else 
+                  array_of_ISBNs_to_remove.add(input)
+                end
+            when '3'
+              exit
+            else
+              puts "\nInvalid Input. Please try again and enter a valid number. \n"
+            end
           else
             puts "\nInvalid Input. Please try again and enter a valid number. \n"
           end
