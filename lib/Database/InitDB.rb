@@ -90,26 +90,35 @@ module Database
     end
 
     def connect_to_db
-      begin
-        puts "DB name: "
-        db_name = gets.chomp
-        puts "Postgres Username: "
-        username = gets.chomp
-        puts "Password: "
-        password = STDIN.noecho(&:gets).chomp
-        con = PG.connect( 
-          :dbname => db_name, 
-          :user => username, 
-          :password => password
-        )
+      emptySession = true
+      while emptySession
+        begin
+          puts "DB name: "
+          db_name = gets.chomp
+          puts "Postgres Username: "
+          username = gets.chomp
+          puts "Password: "
 
-        db_session = DBSession.new(db_name, username, password)
-        return db_session
-        rescue PG::Error => e
-            puts e.message 
-        ensure
-          if con 
-            con.close
+          password = STDIN.noecho(&:gets).chomp
+          con = PG.connect( 
+            :dbname => db_name, 
+            :user => username, 
+            :password => password
+          )
+
+          db_session = DBSession.new(db_name, username, password)
+          if db_session
+            emtySession = false 
+          end
+          return db_session
+          rescue PG::Error => e
+              puts "\nSorry, but there is no match for that db_name, user_name, and password.\n"\
+              "The following error message was generated: #{e.message} \n Please Try Again.\n\n"
+              next
+          ensure
+            if con 
+              con.close
+            end
           end
       end
     end

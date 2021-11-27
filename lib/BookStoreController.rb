@@ -7,23 +7,22 @@ class BookStoreController
 
     def initalize
         puts "\e[2J\e[f" #This is an ANSI escape which essentially clears the terminal (without actually clearing it)
-        prompt_for_db_clearing
-        puts
-        prompt_for_owner_or_controller
+        dbSessionObject = fetch_sesssion_object()
+        prompt_for_owner_or_controller(dbSessionObject)
     end
 
     private
 
-    def prompt_for_owner_or_controller
+    def prompt_for_owner_or_controller(sessionObjctIn)
       if user_input == 'C'
-        Client::ClientController.new.initalize
+        Client::ClientController.new.initalize(sessionObjctIn)
       else
-        Owner::OwnerController.new.initalize
+        Owner::OwnerController.new.initalize(sessionObjctIn)
       end
     end
 
-    def user_input
-      puts "Would you like to proceed as a Client or a Owner? (C/O)"
+    def user_input()
+      puts "\nWould you like to proceed as a Client or a Owner? (C/O)"
       while user_input = gets.chomp # loop while getting user input
         case user_input
         when 'C'
@@ -38,8 +37,8 @@ class BookStoreController
       end
     end
 
-    def prompt_for_db_clearing
-        Database::InitDB.new.connect
+    def fetch_sesssion_object()
+        return Database::InitDB.new.connect
     end
     
     #def should_init_db?
