@@ -1,8 +1,10 @@
+require_relative '../HelperLib/Helper.rb'
+
 module Client
   class ClientController
     def initalize(session_object_in)
       @session_object_in = session_object_in
-      puts "\e[2J\e[f"
+      Helper.clear
       message
       execute
     end
@@ -33,7 +35,8 @@ module Client
 
     #menu options used in execute
     def main_menu_display 
-      puts "\e[2J\e[f\nWelcome to the BookStore, What would you like to Do? \n"\
+      Helper.clear
+      puts "\nWelcome to the BookStore, What would you like to Do? \n"\
       "[1] - exit\n"\
       "[2] - get DB printout of all courses names\n"\
       "[3] - get DB printout of all course details\n"\
@@ -45,7 +48,8 @@ module Client
     end
 
     def book_search_menu_display
-      puts "\e[2J\e[f\nWhat would you like to seach By?\n"\
+      Helper.clear
+      puts "\nWhat would you like to seach By?\n"\
       "[1] - Book Name\n"\
       "[2] - Author Name\n"\
       "[3] - ISBN# \n"\
@@ -54,7 +58,8 @@ module Client
     end
 
     def cart_menu_display
-      puts "\e[2J\e[f\nHere is everything in your Cart\n"\
+      Helper.clear
+      puts "\nHere is everything in your Cart\n"\
       "...contents of cart...\n"\
       "What would you like to do?\n"\
       "[1] - Proceed to Checkout\n"\
@@ -63,11 +68,12 @@ module Client
     end
 
     def invalid_entry_display
-      puts "\e[2J\e[f\nInvalid Input. Please try again and enter a valid number. \n"
+      Helper.clear
+      puts "\nInvalid Input. Please try again and enter a valid number. \n"
     end
 
     def bye_ascii
-      clear
+      Helper.clear
       puts <<-'EOF'   
           __              _          
         |  _ \           | |
@@ -85,17 +91,9 @@ module Client
     end
 
     #Helper Functions
-    def wait 
-      puts "\nPress enter to continue\n"
-      input = gets.chomp
-    end
-
-    def clear
-      puts "\e[2J\e[f\n"
-    end
-
     def book_options_on_display_message(key, value)
-      puts "\e[2J\e[fHere are all our books, after having performed a query for them\n"\
+      Helper.clear
+      puts "Here are all our books, after having performed a query for them\n"\
       "given the provided key #{key} and value #{value} \n"
       puts "\n-----Books-----\n"\
       "ISBN: 1234         Book: example1 \n"\
@@ -112,7 +110,7 @@ module Client
         if input == ''
           break
         elsif book_options_array.include? input
-          clear
+          Helper.clear
           puts "\nDisplaying all info about book with ISBN = #{input}\n"\
           "Would you like to add this book to your Cart? \n"\
           "[0] - No, Return to Book List\n"\
@@ -122,13 +120,13 @@ module Client
           when '0'
             next
           when '1'
-            clear 
+            Helper.clear 
             puts "Book with ISBN#: #{input} Has Been Added to Cart"
           end
         else 
           invalid_entry_display
         end 
-        wait
+        Helper.wait
       end
     end
 
@@ -142,18 +140,18 @@ module Client
 
     def main_menu_case_2
       connection_object = db_connection_open
-      clear
+      Helper.clear
       puts connection_object.exec('SELECT title FROM course').values
       db_connection_close(connection_object)
-      wait
+      Helper.wait
     end
 
     def main_menu_case_3
-      clear
+      Helper.clear
       connection_object = db_connection_open
       puts connection_object.exec('SELECT * FROM course').values
       db_connection_close(connection_object)
-      wait
+      Helper.wait
     end
 
     def main_menu_case_4
@@ -204,52 +202,52 @@ module Client
 
     #Book Search Menu Case Functionality
     def book_search_menu_case_1
-      clear
+      Helper.clear
       puts "What Book Name would you like to search for?\n"
       book_name_input = gets.chomp
       puts "Here are all of books by book_name"
       query_for_books_by_param("book_name", "#{book_name_input}")
-      wait
+      Helper.wait
     end
 
     def book_search_menu_case_2
-      clear
+      Helper.clear
       puts "What Author Name would you like to search for?\n"
       author_name_input = gets.chomp
       puts "Here are all of the books by author name"
       query_for_books_by_param("author_name", "#{author_name_input}")
-      wait
+      Helper.wait
     end
 
     def book_search_menu_case_3
-      clear
+      Helper.clear
       puts "What ISBN would you like to search for?\n"
       isbn_input = gets.chomp
       puts "Here are all of the books by ISBN#"
       query_for_books_by_param("isbn", "#{isbn_input}")
-      wait
+      Helper.wait
     end
 
     def book_search_menu_case_4
-      clear
+      Helper.clear
       puts "What genre would you like to search for?\n"
       genre_input = gets.chomp
       puts "Here are all of the Books by genre"
       query_for_books_by_param("genre", "#{genre_input}")
-      wait
+      Helper.wait
     end
 
     #Cart Menu Case Functionality
     def cart_menu_case_1
-      clear
+      Helper.clear
       puts "\nProceeding To Checkout ....\n"
       puts "\nCheckout Complete, your order number is ###....\n"
-      wait
+      Helper.wait
     end
 
     def cart_menu_case_2
       array_of_ISBNs_to_remove = Array.new
-      clear
+      Helper.clear
       puts "Please Enter the ISBN for the book to want to remove, followed by enter.\n"\
       "Do not include spaces or commas\n"\
       "When Done, Press Enter Again to Submit\n"
@@ -263,10 +261,10 @@ module Client
         end
       end
 
-      clear
+      Helper.clear
       puts "\nThe following books have been remved from your cart\n"
       puts array_of_ISBNs_to_remove
-      wait
+      Helper.wait
     end
 
     #Main Method, Give All Valid Client Interaction Options
