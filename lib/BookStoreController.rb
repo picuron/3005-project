@@ -9,12 +9,12 @@ class BookStoreController
     def initalize
       Helper.clear 
       dbSessionObject = fetch_sesssion_object
-      prompt_for_owner_or_controller(dbSessionObject)
+      prompt_for_owner_or_client(dbSessionObject)
     end
 
     private
 
-    def prompt_for_owner_or_controller(sessionObjctIn)
+    def prompt_for_owner_or_client(sessionObjctIn)
       session = Helper::HelperConnection.new(sessionObjctIn)
       if user_input == 'C'
         Client::ClientController.new(session)

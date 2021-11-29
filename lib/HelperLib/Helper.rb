@@ -27,11 +27,6 @@ module Helper
   end
 
 
-
-
-
-
-
   # Module Helper MEthods
   def wait 
     puts "\nPress enter to continue\n"
@@ -49,6 +44,21 @@ module Helper
     puts "\nInvalid Input. Please try again and enter a valid number. \n"
   end
   module_function :invalid_entry_display
+
+  def bye_ascii
+    Helper.clear
+    puts <<-'EOF'   
+        __              _          
+      |  _ \           | |
+      | |_) |_   _  ___| |
+      |  _ <| | | |/ _ \ |
+      | |_) | |_| |  __/_|
+      |____/ \__, |\___(_)
+              __/ |       
+            |___/        
+    EOF
+  end
+  module_function :bye_ascii
 
 
 end

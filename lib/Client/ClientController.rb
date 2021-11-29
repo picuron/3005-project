@@ -44,20 +44,6 @@ module Client
       "[3] - Return To Main Menu \n"
     end
 
-    def bye_ascii
-      Helper.clear
-      puts <<-'EOF'   
-          __              _          
-        |  _ \           | |
-        | |_) |_   _  ___| |
-        |  _ <| | | |/ _ \ |
-        | |_) | |_| |  __/_|
-        |____/ \__, |\___(_)
-                __/ |       
-              |___/        
-      EOF
-    end
-
     def message
       puts "In Client Controller"
     end
@@ -106,7 +92,7 @@ module Client
 
     #Main Menu Case Functionality
     def main_menu_case_1
-      bye_ascii
+      Helper.bye_ascii
       exit
     end
 
@@ -114,7 +100,7 @@ module Client
       Helper.clear
       connection_object = @db.db_connection_open
       puts connection_object.exec('SELECT title FROM course').values
-      @session_object_in.db_connection_close(connection_object)
+      @db.db_connection_close(connection_object)
       Helper.wait
     end
 
@@ -122,7 +108,7 @@ module Client
       Helper.clear
       connection_object = @db.db_connection_open
       puts connection_object.exec('SELECT * FROM course').values
-      @session_object_in.db_connection_close(connection_object)
+      @db.db_connection_close(connection_object)
       Helper.wait
     end
 
