@@ -15,10 +15,11 @@ class BookStoreController
     private
 
     def prompt_for_owner_or_controller(sessionObjctIn)
+      session = Helper::HelperConnection.new(sessionObjctIn)
       if user_input == 'C'
-        Client::ClientController.new.initalize(sessionObjctIn)
+        Client::ClientController.new(session)
       else
-        Owner::OwnerController.new.initalize(sessionObjctIn)
+        Owner::OwnerController.new(session)
       end
     end
 

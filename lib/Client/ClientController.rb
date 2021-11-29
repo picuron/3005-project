@@ -2,37 +2,14 @@ require_relative '../HelperLib/Helper.rb'
 
 module Client
   class ClientController
-    def initalize(session_object_in)
-      @session_object_in = session_object_in
+    def initialize(session_object_in)
+      @db = session_object_in
       Helper.clear
       message
       execute
     end
 
     private
-
-    #Connection open and close methods
-    # Open takes a Session Object, returns a Conneciton Object
-    # Close tkaes a Connection Object, closes the connection
-    def db_connection_open
-      begin 
-        connection_object = PG.connect( 
-          :dbname => @session_object_in.db_name, 
-          :user => @session_object_in.username, 
-          :password => @session_object_in.password
-        )
-      return connection_object
-      rescue PG::Error => e
-        puts e.message 
-      end 
-    end
-
-    def db_connection_close(connection_object_in)
-      if connection_object_in 
-        connection_object_in.close
-      end
-    end
-
     #menu options used in execute
     def main_menu_display 
       Helper.clear
@@ -65,11 +42,6 @@ module Client
       "[1] - Proceed to Checkout\n"\
       "[2] - Remove Books From Cart\n"\
       "[3] - Return To Main Menu \n"
-    end
-
-    def invalid_entry_display
-      Helper.clear
-      puts "\nInvalid Input. Please try again and enter a valid number. \n"
     end
 
     def bye_ascii
@@ -124,7 +96,7 @@ module Client
             puts "Book with ISBN#: #{input} Has Been Added to Cart"
           end
         else 
-          invalid_entry_display
+          Helper.invalid_entry_display
         end 
         Helper.wait
       end
@@ -139,18 +111,18 @@ module Client
     end
 
     def main_menu_case_2
-      connection_object = db_connection_open
       Helper.clear
+      connection_object = @db.db_connection_open
       puts connection_object.exec('SELECT title FROM course').values
-      db_connection_close(connection_object)
+      @session_object_in.db_connection_close(connection_object)
       Helper.wait
     end
 
     def main_menu_case_3
       Helper.clear
-      connection_object = db_connection_open
+      connection_object = @db.db_connection_open
       puts connection_object.exec('SELECT * FROM course').values
-      db_connection_close(connection_object)
+      @session_object_in.db_connection_close(connection_object)
       Helper.wait
     end
 
@@ -174,7 +146,7 @@ module Client
         when '5'
           break
         else 
-          invalid_entry_display
+          Helper.invalid_entry_display
         end 
       end
     end
@@ -191,7 +163,7 @@ module Client
         when '3'
           break
         else
-          invalid_entry_display
+          Helper.invalid_entry_display
         end
       end
     end
@@ -288,7 +260,7 @@ module Client
         when '7'
           main_menu_case_7
         else
-          invalid_entry_display
+          Helper.invalid_entry_display
         end
       end 
     end

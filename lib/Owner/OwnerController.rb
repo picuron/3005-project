@@ -3,7 +3,7 @@ require_relative '../HelperLib/Helper.rb'
 module Owner
   class OwnerController
       
-    def initalize(session_object_in)
+    def initialize(session_object_in)
       @session_object_in = session_object_in
       Helper.clear
       message
