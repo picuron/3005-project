@@ -1,28 +1,31 @@
 require './Database/InitDB'
 require './Client/ClientController'
 require './Owner/OwnerController'
+require './HelperLib/Helper'
 
 # After the program is launched, the user instantly gets pointed here
 class BookStoreController
 
     def initalize
-        puts "\e[2J\e[f" #This is an ANSI escape which essentially clears the terminal (without actually clearing it)
-        dbSessionObject = fetch_sesssion_object
-        prompt_for_owner_or_controller(dbSessionObject)
+      Helper.clear 
+      dbSessionObject = fetch_sesssion_object
+      prompt_for_owner_or_controller(dbSessionObject)
     end
 
     private
 
     def prompt_for_owner_or_controller(sessionObjctIn)
+      session = Helper::HelperConnection.new(sessionObjctIn)
       if user_input == 'C'
-        Client::ClientController.new.initalize(sessionObjctIn)
+        Client::ClientController.new(session)
       else
-        Owner::OwnerController.new.initalize(sessionObjctIn)
+        Owner::OwnerController.new(session)
       end
     end
 
     def user_input
-      puts "\e[2J\e[f\nWould you like to proceed as a Client or a Owner? (C/O)"
+      Helper.clear
+      puts "\nWould you like to proceed as a Client or a Owner? (C/O)"
       while user_input = gets.chomp # loop while getting user input
         case user_input
         when 'C'
