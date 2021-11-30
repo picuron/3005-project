@@ -22,55 +22,28 @@ module Client
     end
 
     #Book Search Menu Case Functionality
-    def book_search_menu_case_1
+    def search_by(key)
       Helper.clear
-      puts "What Book Name would you like to search for?\n"
-      book_name_input = gets.chomp
-      puts "Here are all of books by book_name"
-      Helper::BooksQueryHelper.new(@db).query_for_books_by_param("book_name", "#{book_name_input}")
+      puts "What #{key} would you like to search for?\n"
+      value = gets.chomp
+      puts "Here are all of books with #{key} #{value}"
+      Helper::BooksQueryHelper.new(@db).query_for_books_by_param("#{key}", "#{value}")
       Helper.wait
     end
 
-    def book_search_menu_case_2
-      Helper.clear
-      puts "What Author Name would you like to search for?\n"
-      author_name_input = gets.chomp
-      puts "Here are all of the books by author name"
-      Helper::BooksQueryHelper.new(@db).query_for_books_by_param("author_name", "#{author_name_input}")
-      Helper.wait
-    end
-
-    def book_search_menu_case_3
-      Helper.clear
-      puts "What ISBN would you like to search for?\n"
-      isbn_input = gets.chomp
-      puts "Here are all of the books by ISBN#"
-      Helper::BooksQueryHelper.new(@db).query_for_books_by_param("isbn", "#{isbn_input}")
-      Helper.wait
-    end
-
-    def book_search_menu_case_4
-      Helper.clear
-      puts "What genre would you like to search for?\n"
-      genre_input = gets.chomp
-      puts "Here are all of the Books by genre"
-      Helper::BooksQueryHelper.new(@db).query_for_books_by_param("genre", "#{genre_input}")
-      Helper.wait
-    end
-
-    def main_menu_case_5
+    def search_controller
       while true
         book_search_menu_display
         input = gets.chomp
         case input
         when '1'
-          book_search_menu_case_1
+          search_by('title')
         when '2' 
-          book_search_menu_case_2
+          search_by('author_name')
         when '3'
-          book_search_menu_case_3
+          search_by('ISBN')
         when '4'
-          book_search_menu_case_4
+          search_by('genre')
         when '5'
           break
         else 
@@ -83,7 +56,7 @@ module Client
     def execute
       puts "In SearchBooks Execute"
       Helper.wait
-      main_menu_case_5
+      search_controller
       Helper.wait
     end 
   end
