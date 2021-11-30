@@ -21,7 +21,6 @@ class BookStoreController
     private
 
     def prompt_for_owner_or_client(session)
-      # session = Helper::HelperConnection.new(session_object)
       if user_input == 'C'
         Client::ClientController.new(session)
       else
