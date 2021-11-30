@@ -45,7 +45,7 @@ module Helper
   end
   module_function :invalid_entry_display
 
-  def bye_ascii
+  def exit_program
     Helper.clear
     puts <<-'EOF'   
         __              _          
@@ -57,8 +57,10 @@ module Helper
               __/ |       
             |___/        
     EOF
+    
+    exit
   end
-  module_function :bye_ascii
+  module_function :exit_program
 
 
 end
