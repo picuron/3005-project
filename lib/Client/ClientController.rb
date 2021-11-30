@@ -14,14 +14,15 @@ module Client
     def main_menu_display 
       Helper.clear
       puts "\nWelcome to the BookStore, What would you like to Do? \n"\
-      "[1] - exit\n"\
-      "[2] - get DB printout of all courses names\n"\
-      "[3] - get DB printout of all course details\n"\
+      "[1] - Exit Program\n"\
+      "[2] - Exit to Client/Owner menu\n"\
+      "[3] - get DB printout of all courses names\n"\
+      "[4] - get DB printout of all course details\n"\
       "the rest of these are real and will be implemented\n"\
-      "[4] - Browse Books\n"\
-      "[5] - Search for Book\n"\
-      "[6] - View Cart\n"\
-      "[7] - View Orders\n"
+      "[5] - Browse Books\n"\
+      "[6] - Search for Book\n"\
+      "[7] - View Cart\n"\
+      "[8] - View Orders\n"
     end
 
     def book_search_menu_display
@@ -92,8 +93,7 @@ module Client
 
     #Main Menu Case Functionality
     def main_menu_case_1
-      Helper.bye_ascii
-      exit
+      Helper.exit_program
     end
 
     def main_menu_case_2
@@ -234,16 +234,18 @@ module Client
         when '1'
           main_menu_case_1
         when '2'
-          main_menu_case_2
+          BookStoreController.new.initalize(@db)
         when '3'
-          main_menu_case_3
+          main_menu_case_2
         when '4'
-          main_menu_case_4
+          main_menu_case_3
         when '5'
-          main_menu_case_5
+          main_menu_case_4
         when '6'
-          main_menu_case_6
+          main_menu_case_5
         when '7'
+          main_menu_case_6
+        when '8'
           main_menu_case_7
         else
           Helper.invalid_entry_display

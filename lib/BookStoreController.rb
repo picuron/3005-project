@@ -6,16 +6,24 @@ require './HelperLib/Helper'
 # After the program is launched, the user instantly gets pointed here
 class BookStoreController
 
-    def initalize
+    def initalize(db_session_object = nil)
       Helper.clear 
-      dbSessionObject = fetch_sesssion_object
-      prompt_for_owner_or_client(dbSessionObject)
+      if(db_session_object)
+        session_object = db_session_object
+        puts "IN HERE"
+      else
+        puts "IN HERE2"
+        db_session_object = fetch_sesssion_object
+        session_object = Helper::HelperConnection.new(db_session_object)
+      end
+      puts session_object
+      prompt_for_owner_or_client(session_object)
     end
 
     private
 
-    def prompt_for_owner_or_client(sessionObjctIn)
-      session = Helper::HelperConnection.new(sessionObjctIn)
+    def prompt_for_owner_or_client(session)
+      # session = Helper::HelperConnection.new(session_object)
       if user_input == 'C'
         Client::ClientController.new(session)
       else
