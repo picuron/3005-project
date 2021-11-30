@@ -10,9 +10,7 @@ class BookStoreController
       Helper.clear 
       if(db_session_object)
         session_object = db_session_object
-        puts "IN HERE"
       else
-        puts "IN HERE2"
         db_session_object = fetch_sesssion_object
         session_object = Helper::HelperConnection.new(db_session_object)
       end
