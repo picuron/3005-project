@@ -1,28 +1,35 @@
 # RELATION SCHEMAS
 
+'*' = FK
 
-**book**(<ins>ISBN</ins>, pub_id, title, genre, publisher_id, royalty, num_pages, price, cost, sales, num_in_stock, threshold_num, num_sold)
+**book**(<ins>ISBN</ins>, p_id*, title, genre, royalty, num_pages, price, cost, sales, num_in_stock, threshold_num, num_sold)
 
 **cart**(<ins>c_id</ins>)
 
 **cart_books**(<ins>c_id</ins>, <ins>ISBN</ins>)
 
-**person_phone_number**( <ins>p_id</ins>, <ins>phone_number</ins>)
+**author_phone_number**( <ins>a_id</ins>, <ins>phone_number</ins>)
 
-**author**(<ins>p_id</ins>, first_name, last_name, email_address)
+**owner_phone_number**( <ins>o_id</ins>, <ins>phone_number</ins>)
 
-**book_authors**(<ins>ISBN</ins>, <ins>p_id</ins>)
+**customer_phone_number**( <ins>c_id</ins>, <ins>phone_number</ins>)
 
-**publisher**(<ins>pub_id</ins>, name, street_name, city, country, postal_code, email_address, bank_account , account_value)
+**author**(<ins>a_id</ins>, first_name, last_name, email_address)
 
-**publisher_phone_number**( <ins>pub_id</ins>, <ins>phone_number</ins>)
+**book_authors**(<ins>ISBN</ins>, <ins>a_id</ins>)
 
-**owner**( <ins>p_id</ins>, first_name, last_name, email_address, username, password)
+**publisher**(<ins>p_id</ins>, address_id*, name, email_address, bank_account , account_value)
 
-**reports**( <ins>r_id</ins>,  p_id, day, month, year, report_type, result)
+**publisher_phone_number**( <ins>p_id</ins>, <ins>phone_number</ins>)
 
-**order**( <ins>order_number</ins> , p_id, c_id, current_location, status, )
+**owner**( <ins>o_id</ins>, first_name, last_name, email_address, username, password)
 
-**customer**( <ins>p_id</ins>,  first_name, last_name, email_address, username, password, rb_street_name, rb_city, rb_country, rb_postal_code, rs_street_name, rs_city, rs_country, rs_postal_code)
+**reports**( <ins>r_id</ins>, o_id*, day, month, year, report_type, result)
 
-**checkout**( <ins>c_id</ins>, billing_address, shipping_address, day, month, year, p_id, c_id,)
+**order**( <ins>order_number</ins> , o_id*, check_id*, cl_city, cl_country, status)
+
+**customer**( <ins>c_id</ins>, shipping_address_id*, billing_address_id*, first_name, last_name, email_address, username, password)
+
+**checkout**( <ins>check_id</ins>, billing_address*, shipping_address*, c_id*, cart_id*, day, month, year)
+
+**address**(<ins>address_id</ins>, street_number, street_name, city, country, postal_code)
