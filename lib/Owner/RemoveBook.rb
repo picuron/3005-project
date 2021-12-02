@@ -17,7 +17,12 @@ module Owner
 
     #Main Method
     def execute
-      puts "In RemoveBook Execute"
+      puts "What is the ISBN of the book you wish to remove?"
+      removal_ISBN = gets.chomp
+
+      #Call removal SQL
+
+      puts "That ISBN has been removed!"
       Helper.wait
     end 
   end

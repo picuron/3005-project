@@ -26,8 +26,17 @@ module Helper
     end
   end
 
+  class LoginSession
+    def initalize(username, password)
+      @username = username
+      @password = password
+
+      return {username: @username, password: @password}
+    end
+  end
 
   # Module Helper MEthods
+
   def wait 
     puts "\nPress enter to continue\n"
     input = gets.chomp
