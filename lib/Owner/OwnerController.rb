@@ -92,7 +92,7 @@ module Owner
     end
 
     def owner_menu_case_5
-      GenerateReports.new(@session_object_in)
+      GenerateReports.new(@session_object_in, @login_session)
     end
 
     def owner_menu_options 
