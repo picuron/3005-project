@@ -7,8 +7,9 @@ require_relative './GenerateReports.rb'
 module Owner
   class OwnerController
       
-    def initialize(session_object_in)
+    def initialize(session_object_in, login_session = nil)
       @session_object_in = session_object_in
+      @login_session = login_session
       Helper.clear
       message
       execute
@@ -21,17 +22,23 @@ module Owner
     end
 
     def owner_log_in
-      Helper.clear
-      puts "Hello! To proceed to the owner page, you must log in as the owner."
-      puts "--The default owner login is:--"
-      puts "--Username: ElRoby--"
-      puts "--Password: COMP3005--"
-      puts "\n"
+      puts @login_session
+      if @login_session == nil
+        Helper.clear
+        puts "Hello! To proceed to the owner page, you must log in as the owner."
+        puts "--The default owner login is:--"
+        puts "--Username: ElRoby--"
+        puts "--Password: COMP3005--"
+        puts "\n"
 
-      puts "Please enter your username:"
-      username = gets.chomp
-      puts "Please enter your password:"
-      password = gets.chomp
+        puts "Please enter your username:"
+        username = gets.chomp
+        puts "Please enter your password:"
+        password = gets.chomp
+      else
+        username = @login_session[:username]
+        password = @login_session[:password]
+      end
 
       #Hardcoding this now until we get DB set up
       return true if login_successfully_validated(username, password)
@@ -39,7 +46,10 @@ module Owner
     end
 
     def login_successfully_validated(username, password)
-      return true if(username == "ElRoby" && password == "COMP3005")
+      if(username == "ElRoby" && password == "COMP3005")
+        @login_session = Helper::LoginSession.new.initalize(username, password)
+        return true
+      end
       false
     end
 
@@ -70,11 +80,11 @@ module Owner
     end
 
     def owner_menu_case_2
-      FulfillOrders.new(@session_object_in)
+      FulfillOrders.new(@session_object_in, @login_session)
     end
 
     def owner_menu_case_3
-      AddBook.new(@session_object_in)
+      AddBook.new(@session_object_in, @login_session)
     end
 
     def owner_menu_case_4
