@@ -38,7 +38,7 @@
 
   &nbsp;&nbsp; email_address &rarr; (first_name, last_name, o_id),
 
-  &nbsp;&nbsp; (username, password) &rarr; c_id
+  &nbsp;&nbsp; (username, password) &rarr; o_id
 
 }
 
