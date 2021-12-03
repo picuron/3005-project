@@ -11,11 +11,11 @@
 ---
 ### Book 
 
-book = {ISBN, p_id, title, genre, royalty, num_pages, price, cost, sales, num_in_stock, threshold_num, num_sold}
+book = {ISBN, p_id, title, genre, royalty, num_pages, price, cost, num_in_stock, threshold_num, num_sold}
 
 F = {
   
-  &nbsp;&nbsp; ISBN &rarr; (p_id, title, genre, royalty, num_pages, price, cost, sales, num_in_stock, threshold_num, num_sold)
+  &nbsp;&nbsp; ISBN &rarr; (p_id, title, genre, royalty, num_pages, price, cost, num_in_stock, threshold_num, num_sold)
 
 }
 
@@ -23,24 +23,24 @@ F<sub>c</sub> = F
 
 F<sub>c</sub> = {
 
-  &nbsp;&nbsp; ISBN &rarr; (p_id, title, genre, royalty, num_pages, price, cost, sales, num_in_stock, threshold_num, num_sold)
+  &nbsp;&nbsp; ISBN &rarr; (p_id, title, genre, royalty, num_pages, price, cost, num_in_stock, threshold_num, num_sold)
 
 }
 
 1) Since there exists only 1 FD, no union can be formed
 2) Since there exists only 1 FD, none of the attributes can be extraneous, therefore nothing to remove from F<sub>c</sub>
-3) Therefore, R<sub>1</sub> = {ISBN, p_id, title, genre, royalty, num_pages, price, cost, sales, num_in_stock, threshold_num, num_sold}
+3) Therefore, R<sub>1</sub> = {ISBN, p_id, title, genre, royalty, num_pages, price, cost, num_in_stock, threshold_num, num_sold}
 4) ISBN from R<sub>1</sub> is a candidate key for the relation book
 5) R<sub>1</sub> is the only relation, and therefore is not a subset of any other relation
 
 The relation book therefore satisfies 3NF, and is in good normal form. No decomposition required.
 
-**book**(<ins>ISBN</ins>, p_id*, title, genre, royalty, num_pages, price, cost, sales, num_in_stock, threshold_num, num_sold)
+**book**(<ins>ISBN</ins>, p_id*, title, genre, royalty, num_pages, price, cost, num_in_stock, threshold_num, num_sold)
 
 ---
 ### Cart
 
-cart = {c_id}
+cart = {cart_id}
 
 F = { }
 
@@ -50,18 +50,18 @@ F<sub>c</sub> = { }
 
 1) Since there exists 0 FD's, no union can be formed
 2) Since there exists 0 FD's, none of the attributes can be extraneous, therefore nothing to remove from F<sub>c</sub>
-3) Therefore, R<sub>1</sub> = {c_id} as c_id &rarr; c_id is the only inferrable (trivial) FD
-4) c_id from R<sub>1</sub> is a candidate key for the relation cart
+3) Therefore, R<sub>1</sub> = {cart_id} as cart_id &rarr; cart_id is the only inferrable (trivial) FD
+4) cart_id from R<sub>1</sub> is a candidate key for the relation cart
 5) R<sub>1</sub> is the only relation, and therefore is not a subset of any other relation
 
 The relation cart therefore satisfies 3NF, and is in good normal form. No decomposition required.
 
-**cart**(<ins>c_id</ins>)
+**cart**(<ins>cart_id</ins>)
 
 ---
 ### Cart_Books
 
-cart_books = (c_id, ISBN)
+cart_books = (cart_id, ISBN)
 
 F = { }
 
@@ -71,13 +71,13 @@ F<sub>c</sub> = { }
 
 1) Since there exists 0 FD's, no union can be formed
 2) Since there exists 0 FD's, none of the attributes can be extraneous, therefore nothing to remove from F<sub>c</sub>
-3) Therefore, R<sub>1</sub> = {c_id, ISBN} as (c_id, ISBN) &rarr; (c_id, ISBN) is the only inferrable (trivial) FD
-4) (c_id, ISBN) from R<sub>1</sub> is a candidate key for the relation cart_books
+3) Therefore, R<sub>1</sub> = {cart_id, ISBN} as (cart_id, ISBN) &rarr; (cart_id, ISBN) is the only inferrable (trivial) FD
+4) (cart_id, ISBN) from R<sub>1</sub> is a candidate key for the relation cart_books
 5) R<sub>1</sub> is the only relation, and therefore is not a subset of any other relation
 
 The relation cart_books therefore satisfies 3NF, and is in good normal form. No decomposition required.
 
-**cart_books**(<ins>c_id</ins>, <ins>ISBN</ins>)
+**cart_books**(<ins>cart_id</ins>, <ins>ISBN</ins>)
 
 ---
 ### Author_Phone_Number
@@ -161,7 +161,7 @@ F<sub>c</sub> = {
 
 &nbsp;&nbsp; a_id &rarr; (first_name, last_name, email_address),
 
-&nbsp;&nbsp; email_address &rarr; a_id
+&nbsp;&nbsp; email_address &rarr; (a_id, first_name, last_name)
 
 }
 
@@ -178,47 +178,90 @@ F<sub>c</sub> = {
 
             1) a_id &rarr; a_id : a_id<sup>+</sup> = { a_id }
             2) a_id &rarr; (last_name, email_address) : a_id<sup>+</sup> = { a_id, last_name, email_address }
+            3) email_address &rarr; (a_id, first_name, last_name) : a_id<sup>+</sup> = { a_id, last_name, email_address, first_name }
 
-              * Nothing else can be inferred, since first_name is not in a_id<sup>+</sup>, first_name is
-                not an extraneous attribute, and must stay in the FD.
+              * Since first_name can be found in a_id<sup>+</sup> , it is extraneous. We will replace the FD a_id &rarr; (first_name, last_name, email_address) with the FD a_id &rarr; (last_name, email_address) in F<sub>c</sub>
 
-      *  Is last_name extraneous in a_id &rarr; (first_name, last_name, email_address) ?
+                * Therefore, the new adjusted Canonical Cover
+                
+                F<sub>c</sub> = {
 
-          * Replace a_id &rarr; (first_name, last_name, email_address) with a_id &rarr; (first_name, email_address)
+                  a_id --> (last_name, email_address),
+
+                  email_address --> (a_id, first_name, last_name),
+
+                }
+
+      *  Is last_name extraneous in a_id &rarr; (last_name, email_address) ?
+
+          * Replace a_id &rarr; (last_name, email_address) with a_id &rarr; (email_address)
 
           * a_id<sup>+</sup> = { } 
 
             1) a_id &rarr; a_id : a_id<sup>+</sup> = { a_id }
-            2) a_id &rarr; (first_name, email_address) : a_id<sup>+</sup> = { a_id, first_name, email_address }
+            2) a_id &rarr; (email_address) : a_id<sup>+</sup> = { a_id, email_address }
+            3) email_address &rarr; (a_id, first_name, last_name) : a_id<sup>+</sup> = { a_id, email_address, first_name, last_name }
 
-              * Nothing else can be inferred, since last_name is not in a_id<sup>+</sup>, last_name is
-                not an extraneous attribute, and must stay in the FD.
+              * Since last_name can be found in a_id<sup>+</sup> , it is extraneous. We will replace the FD a_id &rarr; (last_name, email_address) with the FD a_id &rarr; (email_address) in F<sub>c</sub>
+
+                * Therefore, the new adjusted Canonical Cover
+                
+                F<sub>c</sub> = {
+
+                  a_id --> (email_address),
+
+                  email_address --> (a_id, first_name, last_name),
+
+                }
 
       *  Is email_address extraneous in a_id &rarr; (first_name, last_name, email_address) ?
 
-          * Replace a_id &rarr; (first_name, last_name, email_address) with a_id &rarr; (first_name, last_name)
-
-          * a_id<sup>+</sup> = { } 
-
-            1) a_id &rarr; a_id : a_id<sup>+</sup> = { a_id }
-            2) a_id &rarr; (first_name, last_name) : a_id<sup>+</sup> = { a_id, first_name, last_name }
-
-              * Nothing else can be inferred, since email_address is not in a_id<sup>+</sup>, email_address is
-                not an extraneous attribute, and must stay in the FD.
+          * Since there is only 1 attribute on either the LHS and RHS, neither can be extraneous.
 
 
-    * Case for email_address &rarr; a_id
+    * Case for email_address &rarr; (a_id, first_name, last_name)
 
-      * Since there is only 1 attribute on the LHS and 1 attribute on the RHS, none of the attributes can be extraneous
+      * Is a_id extraneous in email_address &rarr; (a_id, first_name, last_name) ?
+
+          * Replace email_address &rarr; (a_id, first_name, last_name) with email_address &rarr; (first_name, last_name)
+
+          * email_address<sup>+</sup> = { } 
+
+            1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
+            2) email_address &rarr; (first_name, last_name) : email_address<sup>+</sup> = { email_address, first_name, last_name }
+
+              * Nothing else can be inferred, since a_id is not in p_id<sup>+</sup>, a_id is not an extraneous attribute, and must stay in the FD
+
+      * Is first_name extraneous in email_address &rarr; (a_id, first_name, last_name) ?
+
+          * Replace email_address &rarr; (a_id, first_name, last_name) with email_address &rarr; (a_id, last_name)
+
+          * email_address<sup>+</sup> = { } 
+
+            1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
+            2) email_address &rarr; (a_id, last_name) : email_address<sup>+</sup> = { email_address, a_id, last_name }
+
+              * Nothing else can be inferred, since first_name is not in p_id<sup>+</sup>, first_name is not an extraneous attribute, and must stay in the FD
+
+      * Is last_name extraneous in email_address &rarr; (a_id, first_name, last_name) ?
+
+          * Replace email_address &rarr; (a_id, first_name, last_name) with email_address &rarr; (a_id, first_name)
+
+          * email_address<sup>+</sup> = { } 
+
+            1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
+            2) email_address &rarr; (a_id, first_name) : email_address<sup>+</sup> = { email_address, a_id, first_name }
+
+              * Nothing else can be inferred, since last_name is not in p_id<sup>+</sup>, last_name is not an extraneous attribute, and must stay in the FD
 
 
-3) Therefore, R<sub>1</sub> = {a_id, first_name, last_name, email_address} and R<sub>2</sub> = {a_id, email_address}
-4) a_id from R<sub>1</sub> is a candidate key for the relation customer_phone_number
-5) R<sub>2</sub> is a subset of R<sub>1</sub> , and therefore can be deleted. 
+3) Therefore, R<sub>1</sub> = {a_id, email_address} and R<sub>2</sub> = {email_address, first_name, last_day, a_id}
+4) a_id from R<sub>1</sub> is a candidate key for the relation author
+5) Neither of the above relations are subsets of one another, so they will both persist.
 
-The relation author therefore satisfies 3NF, and is in good normal form. No decomposition required.
+**author**(<ins>a_id</ins>, email_address*)
 
-**author**(<ins>a_id</ins>, first_name, last_name, email_address)
+**author_email**(<ins>email_address</ins>, first_name, last_name, a_id)
 
 ---
 ### Book_Authors
@@ -559,6 +602,17 @@ F<sub>c</sub> = {
               3) o_id &rarr; (email_address, username, password) : email_address<sup>+</sup> = {email_address, first_name, o_id, username, password }
 
                 * Nothing else can be inferred, since last_name is not in email_address<sup>+</sup>, last_name is not an extraneous attribute, and must stay in the FD
+          
+        * Is o_id extraneous in email_address &rarr; (first_name, last_name, o_id) ?
+
+            * Replace email_address &rarr; (first_name, last_name, o_id) with email_address &rarr; (first_name, last_name)
+
+            * email_address<sup>+</sup> = { } 
+
+              1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
+              2) email_address &rarr; (first_name, o_id) : email_address<sup>+</sup> = {email_address, first_name, last_name }
+
+                * Nothing else can be inferred, since o_id is not in email_address<sup>+</sup>, o_id is not an extraneous attribute, and must stay in the FD
 
     * Case for (username, password) &rarr; o_id
 
@@ -588,7 +642,7 @@ F<sub>c</sub> = {
 
 **owner**( <ins>o_id</ins>, email_address*, username, password)
 
-**owner_email**( <ins>email_address</ins>, first_name, last_name)
+**owner_email**( <ins>email_address</ins>, first_name, last_name, o_id)
 
 ---
 ### Reports
@@ -811,6 +865,17 @@ F<sub>c</sub> = {
 
                 * Nothing else can be inferred, since last_name is not in email_address<sup>+</sup>, last_name is not an extraneous attribute, and must stay in the FD
 
+        * Is c_id extraneous in email_address &rarr; (first_name, last_name, c_id) ?
+
+            * Replace email_address &rarr; (first_name, last_name, c_id) with email_address &rarr; (first_name, last_name)
+
+            * email_address<sup>+</sup> = { } 
+
+              1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
+              2) email_address &rarr; (first_name, c_id) : email_address<sup>+</sup> = { email_address, first_name, last_name }
+
+                * Nothing else can be inferred, since c_id is not in email_address<sup>+</sup>, c_id is not an extraneous attribute, and must stay in the FD
+
     * Case for (username, password) &rarr; c_id
 
         * Is username extraneous in (username, password) &rarr; c_id ?
@@ -868,7 +933,7 @@ F<sub>c</sub> = {
 
 The relation checkout therefore satisfies 3NF, and is in good normal form. No decomposition required.
 
-**checkout**( <ins>check_id</ins>, billing_address*, shipping_address*, c_id*, cart_id*, day, month, year)
+**checkout**( <ins>check_id</ins>, billing_address_id*, shipping_address_id*, c_id*, cart_id*, day, month, year)
 
 ---
 ### Address
@@ -1012,11 +1077,11 @@ F<sub>c</sub> = {
 
 # The Resulting Relational Schemas
 
-**book**(<ins>ISBN</ins>, p_id*, title, genre, royalty, num_pages, price, cost, sales, num_in_stock, threshold_num, num_sold)
+**book**(<ins>ISBN</ins>, p_id*, title, genre, royalty, num_pages, price, cost, num_in_stock, threshold_num, num_sold)
 
-**cart**(<ins>c_id</ins>)
+**cart**(<ins>cart_id</ins>)
 
-**cart_books**(<ins>c_id</ins>, <ins>ISBN</ins>)
+**cart_books**(<ins>cart_id</ins>, <ins>ISBN</ins>)
 
 **author_phone_number**( <ins>a_id</ins>, <ins>phone_number</ins>)
 
@@ -1024,7 +1089,9 @@ F<sub>c</sub> = {
 
 **customer_phone_number**( <ins>c_id</ins>, <ins>phone_number</ins>)
 
-**author**(<ins>a_id</ins>, first_name, last_name, email_address)
+**author**(<ins>a_id</ins>, email_address)
+
+**author_email**(<ins>email_address</ins>, first_name, last_name, a_id)
 
 **book_authors**(<ins>ISBN</ins>, <ins>a_id</ins>)
 
@@ -1038,7 +1105,7 @@ F<sub>c</sub> = {
 
 **owner**( <ins>o_id</ins>, email_address*, username, password)
 
-**owner_email**( <ins>email_address</ins>, first_name, last_name)
+**owner_email**( <ins>email_address</ins>, first_name, last_name, o_id)
 
 **reports**( <ins>r_id</ins>, o_id*, day, month, year, report_type, result)
 
@@ -1048,7 +1115,7 @@ F<sub>c</sub> = {
 
 **customer_email** (<ins>email_address</ins> , first_name, last_name, c_id)
 
-**checkout**( <ins>check_id</ins>, billing_address*, shipping_address*, c_id*, cart_id*, day, month, year)
+**checkout**( <ins>check_id</ins>, billing_address_id*, shipping_address_id*, c_id*, cart_id*, day, month, year)
 
 **address**(<ins>address_id</ins>, street_number, street_name, postal_code*)
 

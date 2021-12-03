@@ -2,7 +2,7 @@
 
 '*' = FK
 
-**book**(<ins>ISBN</ins>, p_id*, title, genre, royalty, num_pages, price, cost, sales, num_in_stock, threshold_num, num_sold)
+**book**(<ins>ISBN</ins>, p_id*, title, genre, royalty, num_pages, price, cost, num_in_stock, threshold_num, num_sold)
 
 **cart**(<ins>c_id</ins>)
 

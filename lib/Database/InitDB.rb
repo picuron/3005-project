@@ -39,32 +39,72 @@ module Database
       end
     end
 
+    # def drop_all_tables(connection)
+    #   puts "--- Dropping All Tables ---"
+    #   connection.exec('DROP TABLE IF EXISTS classroom CASCADE')
+    #   connection.exec('DROP TABLE IF EXISTS department CASCADE')
+    #   connection.exec('DROP TABLE IF EXISTS course CASCADE')
+    #   connection.exec('DROP TABLE IF EXISTS instructor CASCADE')
+    #   connection.exec('DROP TABLE IF EXISTS section CASCADE')
+    #   connection.exec('DROP TABLE IF EXISTS teaches CASCADE')
+    #   connection.exec('DROP TABLE IF EXISTS student CASCADE')
+    #   connection.exec('DROP TABLE IF EXISTS takes CASCADE')
+    #   connection.exec('DROP TABLE IF EXISTS advisor CASCADE')
+    #   connection.exec('DROP TABLE IF EXISTS time_slot CASCADE')
+    #   connection.exec('DROP TABLE IF EXISTS prereq CASCADE')
+    #   connection.exec('DROP TABLE IF EXISTS person CASCADE')
+    #   puts "--- All Tables Dropped ---"
+    # end
+
+    # def generate_all_tables(connection)
+    #   puts "--- Generating All Tables ---"
+    #   connection.exec(File.read("./Database/SQL/DDL.sql"))
+    #   puts "--- All Tables Generated ---"
+    # end
+
+    # def populate_all_tables(connection)
+    #   puts "--- Populating All Tables ---"
+    #   connection.exec(File.read("./Database/SQL/RelationsInsert.sql"))
+    #   puts "--- All Tables Populated ---"
+    # end
+
     def drop_all_tables(connection)
       puts "--- Dropping All Tables ---"
-      connection.exec('DROP TABLE IF EXISTS classroom CASCADE')
-      connection.exec('DROP TABLE IF EXISTS department CASCADE')
-      connection.exec('DROP TABLE IF EXISTS course CASCADE')
-      connection.exec('DROP TABLE IF EXISTS instructor CASCADE')
-      connection.exec('DROP TABLE IF EXISTS section CASCADE')
-      connection.exec('DROP TABLE IF EXISTS teaches CASCADE')
-      connection.exec('DROP TABLE IF EXISTS student CASCADE')
-      connection.exec('DROP TABLE IF EXISTS takes CASCADE')
-      connection.exec('DROP TABLE IF EXISTS advisor CASCADE')
-      connection.exec('DROP TABLE IF EXISTS time_slot CASCADE')
-      connection.exec('DROP TABLE IF EXISTS prereq CASCADE')
-      connection.exec('DROP TABLE IF EXISTS person CASCADE')
+      connection.exec('DROP TABLE IF EXISTS cart CASCADE')
+      connection.exec('DROP TABLE IF EXISTS author_email CASCADE')
+      connection.exec('DROP TABLE IF EXISTS owner_email CASCADE')
+      connection.exec('DROP TABLE IF EXISTS publisher_email CASCADE')
+      connection.exec('DROP TABLE IF EXISTS customer_email CASCADE')
+      connection.exec('DROP TABLE IF EXISTS publisher_bank CASCADE')
+      connection.exec('DROP TABLE IF EXISTS region CASCADE')
+      connection.exec('DROP TABLE IF EXISTS address CASCADE')
+      connection.exec('DROP TABLE IF EXISTS author CASCADE')
+      connection.exec('DROP TABLE IF EXISTS publisher CASCADE')
+      connection.exec('DROP TABLE IF EXISTS book CASCADE')
+      connection.exec('DROP TABLE IF EXISTS owner CASCADE')
+      connection.exec('DROP TABLE IF EXISTS customer CASCADE')
+      connection.exec('DROP TABLE IF EXISTS reports CASCADE')
+      connection.exec('DROP TABLE IF EXISTS checkout CASCADE')
+      connection.exec('DROP TABLE IF EXISTS orders CASCADE')
+      connection.exec('DROP TABLE IF EXISTS cart_books CASCADE')
+      connection.exec('DROP TABLE IF EXISTS books_author CASCADE')
+      connection.exec('DROP TABLE IF EXISTS author_phone_number CASCADE')
+      connection.exec('DROP TABLE IF EXISTS owner_phone_number CASCADE')
+      connection.exec('DROP TABLE IF EXISTS customer_phone_number CASCADE')
+      connection.exec('DROP TABLE IF EXISTS publisher_phone_number CASCADE')
       puts "--- All Tables Dropped ---"
     end
 
     def generate_all_tables(connection)
       puts "--- Generating All Tables ---"
-      connection.exec(File.read("./Database/SQL/DDL.sql"))
+      connection.exec(File.read("./Database/SQL/realDDL.sql"))
       puts "--- All Tables Generated ---"
     end
 
     def populate_all_tables(connection)
       puts "--- Populating All Tables ---"
-      connection.exec(File.read("./Database/SQL/RelationsInsert.sql"))
+      connection.exec(File.read("./Database/SQL/realRelationsInsert.sql"))
+      puts " we have no data yet "
       puts "--- All Tables Populated ---"
     end
     
