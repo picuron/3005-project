@@ -29,6 +29,9 @@ module Client
     #Helper Functions
     def main_menu_case_2
       Helper.clear
+      # connection_object = @db.db_connection_open
+      # puts connection_object.exec('SELECT title FROM course').values
+      # @db.db_connection_close(connection_object)
       connection_object = @db.db_connection_open
       puts connection_object.exec('SELECT title FROM course').values
       @db.db_connection_close(connection_object)

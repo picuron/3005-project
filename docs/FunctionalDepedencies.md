@@ -4,7 +4,7 @@
 
 **F<sub>book**</sub> = {
   
-  &nbsp;&nbsp; ISBN &rarr; (p_id, title, genre, royalty, num_pages, price, cost, sales, num_in_stock, threshold_num, num_sold)
+  &nbsp;&nbsp; ISBN &rarr; (p_id, title, genre, royalty, num_pages, price, cost, num_in_stock, threshold_num, num_sold)
   
   }
 
@@ -14,7 +14,7 @@
 
   &nbsp;&nbsp; a_id &rarr; (first_name, last_name, email_address),
 
-  &nbsp;&nbsp; email_address &rarr; a_id
+  &nbsp;&nbsp; email_address &rarr; (a_id, first_name, last_name)
  
 }
 
