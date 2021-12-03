@@ -46,7 +46,14 @@ module Owner
     end
 
     def login_successfully_validated(username, password)
-      if(username == "ElRoby" && password == "COMP3005")
+      con = @session_object_in.db_connection_open
+
+      login_statement = "SELECT COUNT(*) FROM owner WHERE username=$1 AND password=$2"
+      query_result = con.exec_params(login_statement, [username, password])
+
+      @session_object_in.db_connection_close(con)
+      
+      if(query_result.values[0][0].to_i > 0)
         @login_session = Helper::LoginSession.new.initalize(username, password)
         return true
       end

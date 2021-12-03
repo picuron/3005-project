@@ -10,7 +10,6 @@ CREATE TABLE author_email
     email_address  VARCHAR(30),
     first_name     VARCHAR(20) NOT NULL,
     last_name      VARCHAR(20) NOT NULL,
-    a_id           INT NOT NULL,
     -- THINK ABOUT THIS MORE
     PRIMARY KEY (email_address)
   );
@@ -20,7 +19,6 @@ CREATE TABLE owner_email
     email_address  VARCHAR(30),
     first_name     VARCHAR(20) NOT NULL,
     last_name      VARCHAR(20) NOT NULL,
-    o_id           INT NOT NULL,
         -- THINK ABOUT THIS MORE
     PRIMARY KEY (email_address)
   );
@@ -29,7 +27,6 @@ CREATE TABLE publisher_email
   (
     email_address  VARCHAR(30),
     name           VARCHAR(30) NOT NULL,
-    p_id           INT NOT NULL,
         -- THINK ABOUT THIS MORE
     PRIMARY KEY (email_address)         
   );
@@ -39,7 +36,6 @@ CREATE TABLE customer_email
     email_address VARCHAR(30), 
     first_name    VARCHAR(20) NOT NULL, 
     last_name     VARCHAR(20) NOT NULL, 
-    c_id          INT NOT NULL,
         -- THINK ABOUT THIS MORE
     PRIMARY KEY (email_address)
   );

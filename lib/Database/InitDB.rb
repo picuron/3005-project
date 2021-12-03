@@ -1,5 +1,6 @@
 require 'pg'
 require 'io/console'
+require_relative './PopulateDB'
 
 module Database
   class InitDB
@@ -87,7 +88,7 @@ module Database
       connection.exec('DROP TABLE IF EXISTS checkout CASCADE')
       connection.exec('DROP TABLE IF EXISTS orders CASCADE')
       connection.exec('DROP TABLE IF EXISTS cart_books CASCADE')
-      connection.exec('DROP TABLE IF EXISTS books_author CASCADE')
+      connection.exec('DROP TABLE IF EXISTS book_author CASCADE')
       connection.exec('DROP TABLE IF EXISTS author_phone_number CASCADE')
       connection.exec('DROP TABLE IF EXISTS owner_phone_number CASCADE')
       connection.exec('DROP TABLE IF EXISTS customer_phone_number CASCADE')
@@ -115,6 +116,7 @@ module Database
         drop_all_tables(con)
         generate_all_tables(con)
         populate_all_tables(con)
+        PopulateDB.new.initalize(con)
 
       rescue PG::Error => e
         puts e.message 

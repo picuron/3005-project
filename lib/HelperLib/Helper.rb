@@ -35,7 +35,7 @@ module Helper
     end
   end
 
-  # Module Helper MEthods
+  # Module Helper Methods
 
   def wait 
     puts "\nPress enter to continue\n"
