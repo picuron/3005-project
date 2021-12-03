@@ -14,7 +14,7 @@
 
   &nbsp;&nbsp; a_id &rarr; (first_name, last_name, email_address),
 
-  &nbsp;&nbsp; email_address &rarr; (a_id, first_name, last_name)
+  &nbsp;&nbsp; email_address &rarr; (first_name, last_name)
  
 }
 
@@ -24,7 +24,7 @@
 
   &nbsp;&nbsp; p_id &rarr; (address_id, name, email_address, bank_account , account_value),
 
-  &nbsp;&nbsp; email_address &rarr; (name, p_id),
+  &nbsp;&nbsp; email_address &rarr; name,
 
   &nbsp;&nbsp; bank_account &rarr; account_value
 
@@ -36,7 +36,7 @@
 
   &nbsp;&nbsp; o_id &rarr; (first_name, last_name, email_address, username, password),
 
-  &nbsp;&nbsp; email_address &rarr; (first_name, last_name, o_id),
+  &nbsp;&nbsp; email_address &rarr; (first_name, last_name),
 
   &nbsp;&nbsp; (username, password) &rarr; o_id
 
@@ -64,7 +64,7 @@
 
   &nbsp;&nbsp; c_id &rarr; (shipping_address_id, billing_address_id, first_name, last_name, email_address, username, password),
   
-  &nbsp;&nbsp; email_address &rarr; (first_name, last_name, c_id),
+  &nbsp;&nbsp; email_address &rarr; (first_name, last_name),
 
   &nbsp;&nbsp; (username, password) &rarr; c_id
 

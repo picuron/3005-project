@@ -151,7 +151,7 @@ F = {
 
 &nbsp;&nbsp; a_id &rarr; (first_name, last_name, email_address),
 
-&nbsp;&nbsp; email_address &rarr; a_id
+&nbsp;&nbsp; email_address &rarr; (first_name, last_name))
 
 }
 
@@ -161,7 +161,7 @@ F<sub>c</sub> = {
 
 &nbsp;&nbsp; a_id &rarr; (first_name, last_name, email_address),
 
-&nbsp;&nbsp; email_address &rarr; (a_id, first_name, last_name)
+&nbsp;&nbsp; email_address &rarr; (first_name, last_name)
 
 }
 
@@ -177,8 +177,8 @@ F<sub>c</sub> = {
           * a_id<sup>+</sup> = { } 
 
             1) a_id &rarr; a_id : a_id<sup>+</sup> = { a_id }
-            2) a_id &rarr; (last_name, email_address) : a_id<sup>+</sup> = { a_id, last_name, email_address }
-            3) email_address &rarr; (a_id, first_name, last_name) : a_id<sup>+</sup> = { a_id, last_name, email_address, first_name }
+            2) a_id &rarr; (last_name, email_address) : a_id<sup>+</sup> = { a_id, last_name, email_address}
+            3) email_address &rarr; (first_name, last_name) : a_id<sup>+</sup> = {last_name, email_address, first_name}
 
               * Since first_name can be found in a_id<sup>+</sup> , it is extraneous. We will replace the FD a_id &rarr; (first_name, last_name, email_address) with the FD a_id &rarr; (last_name, email_address) in F<sub>c</sub>
 
@@ -188,7 +188,7 @@ F<sub>c</sub> = {
 
                   a_id --> (last_name, email_address),
 
-                  email_address --> (a_id, first_name, last_name),
+                  email_address --> (first_name, last_name),
 
                 }
 
@@ -200,7 +200,7 @@ F<sub>c</sub> = {
 
             1) a_id &rarr; a_id : a_id<sup>+</sup> = { a_id }
             2) a_id &rarr; (email_address) : a_id<sup>+</sup> = { a_id, email_address }
-            3) email_address &rarr; (a_id, first_name, last_name) : a_id<sup>+</sup> = { a_id, email_address, first_name, last_name }
+            3) email_address &rarr; (first_name, last_name) : a_id<sup>+</sup> = {email_address, first_name, last_name}
 
               * Since last_name can be found in a_id<sup>+</sup> , it is extraneous. We will replace the FD a_id &rarr; (last_name, email_address) with the FD a_id &rarr; (email_address) in F<sub>c</sub>
 
@@ -210,58 +210,47 @@ F<sub>c</sub> = {
 
                   a_id --> (email_address),
 
-                  email_address --> (a_id, first_name, last_name),
+                  email_address --> (first_name, last_name),
 
                 }
 
-      *  Is email_address extraneous in a_id &rarr; (first_name, last_name, email_address) ?
+      *  Is email_address extraneous in a_id &rarr; (email_address) ?
 
           * Since there is only 1 attribute on either the LHS and RHS, neither can be extraneous.
 
 
-    * Case for email_address &rarr; (a_id, first_name, last_name)
+    * Case for email_address &rarr; (first_name, last_name)
 
-      * Is a_id extraneous in email_address &rarr; (a_id, first_name, last_name) ?
+      * Is first_name extraneous in email_address &rarr; (first_name, last_name) ?
 
-          * Replace email_address &rarr; (a_id, first_name, last_name) with email_address &rarr; (first_name, last_name)
-
-          * email_address<sup>+</sup> = { } 
-
-            1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
-            2) email_address &rarr; (first_name, last_name) : email_address<sup>+</sup> = { email_address, first_name, last_name }
-
-              * Nothing else can be inferred, since a_id is not in p_id<sup>+</sup>, a_id is not an extraneous attribute, and must stay in the FD
-
-      * Is first_name extraneous in email_address &rarr; (a_id, first_name, last_name) ?
-
-          * Replace email_address &rarr; (a_id, first_name, last_name) with email_address &rarr; (a_id, last_name)
+          * Replace email_address &rarr; (first_name, last_name) with email_address &rarr; (last_name)
 
           * email_address<sup>+</sup> = { } 
 
             1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
-            2) email_address &rarr; (a_id, last_name) : email_address<sup>+</sup> = { email_address, a_id, last_name }
+            2) email_address &rarr; (last_name) : email_address<sup>+</sup> = { email_address, last_name }
 
               * Nothing else can be inferred, since first_name is not in p_id<sup>+</sup>, first_name is not an extraneous attribute, and must stay in the FD
 
-      * Is last_name extraneous in email_address &rarr; (a_id, first_name, last_name) ?
+      * Is last_name extraneous in email_address &rarr; (first_name, last_name) ?
 
-          * Replace email_address &rarr; (a_id, first_name, last_name) with email_address &rarr; (a_id, first_name)
+          * Replace email_address &rarr; (first_name, last_name) with email_address &rarr; (first_name)
 
           * email_address<sup>+</sup> = { } 
 
             1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
-            2) email_address &rarr; (a_id, first_name) : email_address<sup>+</sup> = { email_address, a_id, first_name }
+            2) email_address &rarr; (first_name) : email_address<sup>+</sup> = { email_address, first_name }
 
               * Nothing else can be inferred, since last_name is not in p_id<sup>+</sup>, last_name is not an extraneous attribute, and must stay in the FD
 
 
-3) Therefore, R<sub>1</sub> = {a_id, email_address} and R<sub>2</sub> = {email_address, first_name, last_day, a_id}
+3) Therefore, R<sub>1</sub> = {a_id, email_address} and R<sub>2</sub> = {email_address, first_name, last_day}
 4) a_id from R<sub>1</sub> is a candidate key for the relation author
 5) Neither of the above relations are subsets of one another, so they will both persist.
 
 **author**(<ins>a_id</ins>, email_address*)
 
-**author_email**(<ins>email_address</ins>, first_name, last_name, a_id)
+**author_email**(<ins>email_address</ins>, first_name, last_name)
 
 ---
 ### Book_Authors
@@ -293,7 +282,7 @@ F = {
 
   &nbsp;&nbsp; p_id &rarr; (address_id, name, email_address, bank_account , account_value),
 
-  &nbsp;&nbsp; email_address &rarr; (name, p_id),
+  &nbsp;&nbsp; email_address &rarr; (name),
 
   &nbsp;&nbsp; bank_account &rarr; account_value
 
@@ -305,7 +294,7 @@ F<sub>c</sub> = {
 
   &nbsp;&nbsp; p_id &rarr; (address_id, name, email_address, bank_account , account_value),
 
-  &nbsp;&nbsp; email_address &rarr; (name, p_id),
+  &nbsp;&nbsp; email_address &rarr; (name),
 
   &nbsp;&nbsp; bank_account &rarr; account_value
 
@@ -335,7 +324,7 @@ F<sub>c</sub> = {
 
               1) p_id &rarr; p_id : p_id<sup>+</sup> = { p_id }
               2) p_id &rarr; (address_id, email_address, bank_account , account_value) : p_id<sup>+</sup> = { p_id, address_id, email_address, bank_account , account_value }
-              3) email_address &rarr; (name, p_id) : p_id<sup>+</sup> = { p_id, address_id, email_address, bank_account, account_value, name }
+              3) email_address &rarr; (name) : p_id<sup>+</sup> = { p_id, address_id, email_address, bank_account, account_value, name }
 
                 * Since name can be found in p_id<sup>+</sup> , it is extraneous. We will replace the FD p_id &rarr; (address_id, name, email_address, bank_account , account_value) with the FD p_id &rarr; (address_id, email_address, bank_account , account_value) in F<sub>c</sub>
 
@@ -345,7 +334,7 @@ F<sub>c</sub> = {
 
                   p_id --> (address_id, email_address, bank_account , account_value),
 
-                  email_address --> (name, p_id),
+                  email_address --> (name),
 
                   bank_account --> account_value
 
@@ -370,7 +359,7 @@ F<sub>c</sub> = {
 
               1) p_id &rarr; p_id : p_id<sup>+</sup> = { p_id }
               2) p_id &rarr; (address_id, email_address, account_value) : p_id<sup>+</sup> = { p_id, address_id, email_address, account_value }
-              3) email_address &rarr; (name, p_id) : p_id<sup>+</sup> = { p_id, address_id, email_address, account_value, name }
+              3) email_address &rarr; name : p_id<sup>+</sup> = { p_id, address_id, email_address, account_value, name }
 
                 * Nothing else can be inferred, since bank_account is not in p_id<sup>+</sup>, bank_account is not an extraneous attribute, and must stay in the FD
 
@@ -382,7 +371,7 @@ F<sub>c</sub> = {
 
               1) p_id &rarr; p_id : p_id<sup>+</sup> = { p_id }
               2) p_id &rarr; (address_id, email_address, bank_account) : p_id<sup>+</sup> = { p_id, address_id, email_address, bank_account }
-              3) email_address &rarr; (name, p_id) : p_id<sup>+</sup> = { p_id, address_id, email_address, bank_account, name }
+              3) email_address &rarr; name : p_id<sup>+</sup> = { p_id, address_id, email_address, bank_account, name }
               4) bank_account &rarr; account_value : p_id<sup>+</sup> = { p_id, address_id, email_address, bank_account, name, account_value }
 
                 * Since account_value can be found in p_id<sup>+</sup> , it is extraneous. We will replace the FD p_id &rarr; (address_id, email_address, bank_account, account_value) with the FD p_id &rarr; (address_id, email_address, bank_account) in F<sub>c</sub>
@@ -393,49 +382,27 @@ F<sub>c</sub> = {
 
                   p_id --> (address_id, email_address, bank_account),
 
-                  email_address --> (name, p_id),
+                  email_address --> name,
 
                   bank_account --> account_value
 
                 }
 
-    * Case for email_address &rarr; (name, p_id)
+    * Case for email_address &rarr; name
 
-        * Is name extraneous in email_address &rarr; (name, p_id) ?
-
-            * Replace email_address &rarr; (name, p_id) with email_address &rarr; (p_id)
-
-            * email_address<sup>+</sup> = { }
-
-              1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
-              2) email_address &rarr; p_id : email_address<sup>+</sup> = { email_address, p_id }
-              3) p_id &rarr; (address_id, email_address, bank_account) : email_address<sup>+</sup> = { email_address, p_id, address_id, bank_account }
-              4) bank_account &rarr; account_value : email_address<sup>+</sup> = { email_address, p_id, address_id, bank_account, account_value }
-
-                * Nothing else can be inferred, since name is not in email_address<sup>+</sup>, name is not an extraneous attribute, and must stay in the FD
-
-        * Is p_id extraneous in email_address &rarr; (name, p_id) ?
-
-            * Replace email_address &rarr; (name, p_id) with email_address &rarr; (name)
-
-            * email_address<sup>+</sup> = { }
-
-              1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
-              2) email_address &rarr; name : email_address<sup>+</sup> = { email_address, name}
-
-                * Nothing else can be inferred, since p_id is not in email_address<sup>+</sup>, p_id is not an extraneous attribute, and must stay in the FD
+        * Since there is only 1 attribute on either the LHS and RHS, no attributes in this FD can be extraneous. 
 
     * Case for bank_account &rarr; account_value
 
         * Since there is only 1 attribute on either the LHS and RHS, no attributes in this FD can be extraneous.
 
-3) Therefore, R<sub>1</sub> = {p_id, address_id, email_address, bank_account}, R<sub>2</sub> = {email_address, name, p_id}, and R<sub>3</sub> = {bank_account, account_value }
+3) Therefore, R<sub>1</sub> = {p_id, address_id, email_address, bank_account}, R<sub>2</sub> = {email_address, name}, and R<sub>3</sub> = {bank_account, account_value }
 4) p_id from R<sub>1</sub> is a candidate key for the relation book_authors
 5) None of R<sub>1</sub>, R<sub>2</sub>, or R<sub>3</sub> are subsets of one another, so we must decompose the relation publsiher into three new relations. These will be the schemas for the new relations...
 
 **publisher** (<ins>p_id</ins>, address_id*, email_address*, bank_account*)
 
-**publisher_email** (<ins>email_address</ins>, name, p_id)
+**publisher_email** (<ins>email_address</ins>, name)
 
 **publisher_bank** (<ins>bank_account</ins>, account_value)
 
@@ -471,7 +438,7 @@ F = {
 
   &nbsp;&nbsp; o_id &rarr; (first_name, last_name, email_address, username, password),
 
-  &nbsp;&nbsp; email_address &rarr; (first_name, last_name, o_id),
+  &nbsp;&nbsp; email_address &rarr; (first_name, last_name),
 
   &nbsp;&nbsp; (username, password) &rarr; o_id
 
@@ -483,7 +450,7 @@ F<sub>c</sub> = {
 
   &nbsp;&nbsp; o_id &rarr; (first_name, last_name, email_address, username, password),
 
-  &nbsp;&nbsp; email_address &rarr; (first_name, last_name, o_id),
+  &nbsp;&nbsp; email_address &rarr; (first_name, last_name),
 
   &nbsp;&nbsp; (username, password) &rarr; o_id
 
@@ -502,7 +469,7 @@ F<sub>c</sub> = {
 
               1) o_id &rarr; o_id : o_id<sup>+</sup> = { o_id }
               2) o_id &rarr; (last_name, email_address, username, password) : o_id<sup>+</sup> = { o_id, last_name, email_address, username, password }
-              3) email_address &rarr; (first_name, last_name, o_id) : o_id<sup>+</sup> = { o_id, last_name, email_address, username, password, first_name }
+              3) email_address &rarr; (first_name, last_name) : o_id<sup>+</sup> = { o_id, last_name, email_address, username, password, first_name }
 
                 * Since first_name can be found in o_id<sup>+</sup> , it is extraneous. We will replace the FD o_id &rarr; (first_name, last_name, email_address, username, password) with the FD o_id &rarr; (last_name, email_address, username, password) in F<sub>c</sub>
 
@@ -512,7 +479,7 @@ F<sub>c</sub> = {
 
                   o_id --> (last_name, email_address, username, password),
 
-                  email_address --> (first_name, last_name, o_id),
+                  email_address --> (first_name, last_name),
 
                   (username, password) --> o_id
 
@@ -526,7 +493,7 @@ F<sub>c</sub> = {
 
               1) o_id &rarr; o_id : o_id<sup>+</sup> = { o_id }
               2) o_id &rarr; (email_address, username, password) : o_id<sup>+</sup> = { o_id, email_address, username, password }
-              3) email_address &rarr; (first_name, last_name, o_id) : o_id<sup>+</sup> = { o_id, email_address, username, password, first_name, last_name}
+              3) email_address &rarr; (first_name, last_name) : o_id<sup>+</sup> = { o_id, email_address, username, password, first_name, last_name}
 
                 * Since last_name can be found in o_id<sup>+</sup> , it is extraneous. We will replace the FD o_id &rarr; (last_name, email_address, username, password) with the FD o_id &rarr; (email_address, username, password) in F<sub>c</sub>
 
@@ -536,7 +503,7 @@ F<sub>c</sub> = {
 
                   o_id --> (email_address, username, password),
 
-                  email_address --> (first_name, last_name, o_id),
+                  email_address --> (first_name, last_name),
 
                   (username, password) --> o_id
 
@@ -561,7 +528,7 @@ F<sub>c</sub> = {
 
               1) o_id &rarr; o_id : o_id<sup>+</sup> = { o_id }
               2) o_id &rarr; (email_address, password) : o_id<sup>+</sup> = { o_id, email_address, password }
-              3) email_address &rarr; (first_name, last_name, o_id) : p_id<sup>+</sup> = {o_id, email_address, password, first_name, last_name }
+              3) email_address &rarr; (first_name, last_name) : p_id<sup>+</sup> = {o_id, email_address, password, first_name, last_name }
 
                 * Nothing else can be inferred, since username is not in o_id<sup>+</sup>, username is not an extraneous attribute, and must stay in the FD
 
@@ -573,47 +540,34 @@ F<sub>c</sub> = {
 
               1) o_id &rarr; o_id : o_id<sup>+</sup> = { o_id }
               2) o_id &rarr; (email_address, username) : o_id<sup>+</sup> = { o_id, email_address, username }
-              3) email_address &rarr; (first_name, last_name, o_id) : p_id<sup>+</sup> = {o_id, email_address, username, first_name, last_name }
+              3) email_address &rarr; (first_name, last_name) : p_id<sup>+</sup> = {o_id, email_address, username, first_name, last_name }
 
                 * Nothing else can be inferred, since password is not in o_id<sup>+</sup>, password is not an extraneous attribute, and must stay in the FD
 
-    * Case for email_address &rarr; (first_name, last_name, o_id)
+    * Case for email_address &rarr; (first_name, last_name)
 
-        * Is first_name extraneous in email_address &rarr; (first_name, last_name, o_id) ?
+        * Is first_name extraneous in email_address &rarr; (first_name, last_name) ?
 
-            * Replace email_address &rarr; (first_name, last_name, o_id) with email_address &rarr; (last_name, o_id)
+            * Replace email_address &rarr; (first_name, last_name) with email_address &rarr; last_name
 
             * email_address<sup>+</sup> = { } 
 
               1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
-              2) email_address &rarr; (last_name, o_id) : email_address<sup>+</sup> = {email_address, last_name, o_id }
-              3) o_id &rarr; (email_address, username, password) : email_address<sup>+</sup> = {email_address, last_name, o_id, username, password }
+              2) email_address &rarr; last_name : email_address<sup>+</sup> = { email_address, last_name, }
 
                 * Nothing else can be inferred, since first_name is not in email_address<sup>+</sup>, first_name is not an extraneous attribute, and must stay in the FD
 
-        * Is last_name extraneous in email_address &rarr; (first_name, last_name, o_id) ?
+        * Is last_name extraneous in email_address &rarr; (first_name, last_name) ?
 
-            * Replace email_address &rarr; (first_name, last_name, o_id) with email_address &rarr; (first_name, o_id)
+            * Replace email_address &rarr; (first_name, last_name) with email_address &rarr; first_name
 
             * email_address<sup>+</sup> = { } 
 
               1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
-              2) email_address &rarr; (first_name, o_id) : email_address<sup>+</sup> = {email_address, first_name, o_id }
-              3) o_id &rarr; (email_address, username, password) : email_address<sup>+</sup> = {email_address, first_name, o_id, username, password }
+              2) email_address &rarr; first_name : email_address<sup>+</sup> = {email_address, first_name}
 
                 * Nothing else can be inferred, since last_name is not in email_address<sup>+</sup>, last_name is not an extraneous attribute, and must stay in the FD
           
-        * Is o_id extraneous in email_address &rarr; (first_name, last_name, o_id) ?
-
-            * Replace email_address &rarr; (first_name, last_name, o_id) with email_address &rarr; (first_name, last_name)
-
-            * email_address<sup>+</sup> = { } 
-
-              1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
-              2) email_address &rarr; (first_name, o_id) : email_address<sup>+</sup> = {email_address, first_name, last_name }
-
-                * Nothing else can be inferred, since o_id is not in email_address<sup>+</sup>, o_id is not an extraneous attribute, and must stay in the FD
-
     * Case for (username, password) &rarr; o_id
 
         * Is username extraneous in (username, password) &rarr; o_id ?
@@ -636,13 +590,13 @@ F<sub>c</sub> = {
             
                 * Nothing else can be inferred, since username alone cannot imply o_id, password must stay in the FD.
 
-3) Therefore, R<sub>1</sub> = {o_id, email_address, username, password}, R<sub>2</sub> = {email_address, first_name, last_name, o_id}, and R<sub>3</sub> = {o_id, username, password}.
+3) Therefore, R<sub>1</sub> = {o_id, email_address, username, password}, R<sub>2</sub> = {email_address, first_name, last_name}, and R<sub>3</sub> = {o_id, username, password}.
 4) o_id from R<sub>1</sub> is a candidate key for the relation owner
 5) R<sub>3</sub> is a subset of R<sub>1</sub>, so it will be deleted, R<sub>1</sub> and R<sub>2</sub> will persist and be the product of this decomposition... 
 
 **owner**( <ins>o_id</ins>, email_address*, username, password)
 
-**owner_email**( <ins>email_address</ins>, first_name, last_name, o_id)
+**owner_email**( <ins>email_address</ins>, first_name, last_name)
 
 ---
 ### Reports
@@ -711,7 +665,7 @@ F = {
 
   &nbsp;&nbsp; c_id &rarr; (shipping_address_id, billing_address_id, first_name, last_name, email_address, username, password),
   
-  &nbsp;&nbsp; email_address &rarr; (first_name, last_name, c_id),
+  &nbsp;&nbsp; email_address &rarr; (first_name, last_name),
 
   &nbsp;&nbsp; (username, password) &rarr; c_id
 
@@ -723,7 +677,7 @@ F<sub>c</sub> = {
 
   &nbsp;&nbsp; c_id &rarr; (shipping_address_id, billing_address_id, first_name, last_name, email_address, username, password),
   
-  &nbsp;&nbsp; email_address &rarr; (first_name, last_name, c_id),
+  &nbsp;&nbsp; email_address &rarr; (first_name, last_name),
 
   &nbsp;&nbsp; (username, password) &rarr; c_id
 
@@ -764,7 +718,7 @@ F<sub>c</sub> = {
 
               1) c_id &rarr; c_id : c_id<sup>+</sup> = { c_id }
               2) c_id &rarr; ( shipping_address_id, billing_address, last_name, email_address, username, password) : c_id<sup>+</sup> = { c_id, shipping_address_id, billing_address, last_name, email_address, username, password }
-              3) email_address &rarr; (first_name, last_name, c_id) : c_id<sup>+</sup> = { c_id, shipping_address_id, billing_address, last_name, email_address, username, password, first_name }
+              3) email_address &rarr; (first_name, last_name : c_id<sup>+</sup> = { c_id, shipping_address_id, billing_address, last_name, email_address, username, password, first_name }
 
                 * Since first_name can be found in c_id<sup>+</sup> , it is extraneous. We will replace the FD c_id &rarr; (shipping_address_id, billing_address_id, first_name, last_name, email_address, username, password) with the FD c_id &rarr; ( shipping_address_id, billing_address, last_name, email_address, username, password) in F<sub>c</sub>
 
@@ -774,7 +728,7 @@ F<sub>c</sub> = {
 
                   c_id --> (shipping_address_id, billing_address_id, last_name, email_address, username, password),
                   
-                  email_address --> (first_name, last_name, c_id),
+                  email_address --> (first_name, last_name),
 
                   (username, password) --> c_id
 
@@ -788,7 +742,7 @@ F<sub>c</sub> = {
 
               1) c_id &rarr; c_id : c_id<sup>+</sup> = { c_id }
               2) c_id &rarr; ( shipping_address_id, billing_address, email_address, username, password) : c_id<sup>+</sup> = { c_id, shipping_address_id, billing_address, email_address, username, password }
-              3) email_address &rarr; (first_name, last_name, c_id) : c_id<sup>+</sup> = { c_id, shipping_address_id, billing_address, email_address, username, password, first_name, last_name }
+              3) email_address &rarr; (first_name, last_name) : c_id<sup>+</sup> = { c_id, shipping_address_id, billing_address, email_address, username, password, first_name, last_name }
 
                 * Since last_name can be found in c_id<sup>+</sup> , it is extraneous. We will replace the FD c_id &rarr; (shipping_address_id, billing_address_id, last_name, email_address, username, password) with the FD c_id &rarr; (shipping_address_id, billing_address_id, email_address, username, password) in F<sub>c</sub>
 
@@ -798,7 +752,7 @@ F<sub>c</sub> = {
 
                   c_id --> (shipping_address_id, billing_address_id, email_address, username, password),
                   
-                  email_address --> (first_name, last_name, c_id),
+                  email_address --> (first_name, last_name),
 
                   (username, password) --> c_id
 
@@ -823,7 +777,7 @@ F<sub>c</sub> = {
 
               1) c_id &rarr; c_id : c_id<sup>+</sup> = { c_id }
               2) c_id &rarr; ( shipping_address_id, billing_address, email_address, password) : c_id<sup>+</sup> = { c_id, shipping_address_id, billing_address, email_address, password }
-              3) email_address --> (first_name, last_name, c_id) : c_id<sup>+</sup> = { c_id, shipping_address_id, billing_address, email_address, password, first_name, last_name }
+              3) email_address --> (first_name, last_name) : c_id<sup>+</sup> = { c_id, shipping_address_id, billing_address, email_address, password, first_name, last_name }
 
                 *  Nothing else can be inferred, since username is not in c_id<sup>+</sup>, username is not an extraneous attribute, and must stay in the FD
 
@@ -835,46 +789,33 @@ F<sub>c</sub> = {
 
               1) c_id &rarr; c_id : c_id<sup>+</sup> = { c_id }
               2) c_id &rarr; ( shipping_address_id, billing_address, email_address, username) : c_id<sup>+</sup> = { c_id, shipping_address_id, billing_address, email_address, username }
-              3) email_address --> (first_name, last_name, c_id) : c_id<sup>+</sup> = { c_id, shipping_address_id, billing_address, email_address, username, first_name, last_name }
+              3) email_address --> (first_name, last_name) : c_id<sup>+</sup> = { c_id, shipping_address_id, billing_address, email_address, username, first_name, last_name }
 
                 *  Nothing else can be inferred, since password is not in c_id<sup>+</sup>, password is not an extraneous attribute, and must stay in the FD
 
-    * Case for email_address &rarr; (first_name, last_name, c_id)
+    * Case for email_address &rarr; (first_name, last_name)
 
-        * Is first_name extraneous in email_address &rarr; (first_name, last_name, c_id) ?
+        * Is first_name extraneous in email_address &rarr; (first_name, last_name) ?
 
-            * Replace email_address &rarr; (first_name, last_name, c_id) with email_address &rarr; (last_name, c_id)
+            * Replace email_address &rarr; (first_name, last_name) with email_address &rarr; last_name
 
             * email_address<sup>+</sup> = { } 
 
               1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
-              2) email_address &rarr; (last_name, c_id) : email_address<sup>+</sup> = { email_address, last_name, c_id }
-              3) c_id &rarr; (shipping_address_id, billing_address_id, email_address, username, password) : email_address<sup>+</sup> = { email_address, last_name, c_id, shipping_address_id, billing_address_id, username, password }
+              2) email_address &rarr; last_name : email_address<sup>+</sup> = { email_address, last_name }
 
                 * Nothing else can be inferred, since first_name is not in email_address<sup>+</sup>, first_name is not an extraneous attribute, and must stay in the FD
 
-        * Is last_name extraneous in email_address &rarr; (first_name, last_name, c_id) ?
+        * Is last_name extraneous in email_address &rarr; (first_name, last_name) ?
 
-            * Replace email_address &rarr; (first_name, last_name, c_id) with email_address &rarr; (first_name, c_id)
+            * Replace email_address &rarr; (first_name, last_name) with email_address &rarr; first_name
 
             * email_address<sup>+</sup> = { } 
 
               1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
-              2) email_address &rarr; (first_name, c_id) : email_address<sup>+</sup> = { email_address, first_name, c_id }
-              3) c_id &rarr; (shipping_address_id, billing_address_id, email_address, username, password) : email_address<sup>+</sup> = { email_address, first_name, c_id, shipping_address_id, billing_address_id, username, password }
+              2) email_address &rarr; first_name : email_address<sup>+</sup> = { email_address, first_name}
 
                 * Nothing else can be inferred, since last_name is not in email_address<sup>+</sup>, last_name is not an extraneous attribute, and must stay in the FD
-
-        * Is c_id extraneous in email_address &rarr; (first_name, last_name, c_id) ?
-
-            * Replace email_address &rarr; (first_name, last_name, c_id) with email_address &rarr; (first_name, last_name)
-
-            * email_address<sup>+</sup> = { } 
-
-              1) email_address &rarr; email_address : email_address<sup>+</sup> = { email_address }
-              2) email_address &rarr; (first_name, c_id) : email_address<sup>+</sup> = { email_address, first_name, last_name }
-
-                * Nothing else can be inferred, since c_id is not in email_address<sup>+</sup>, c_id is not an extraneous attribute, and must stay in the FD
 
     * Case for (username, password) &rarr; c_id
 
@@ -898,13 +839,13 @@ F<sub>c</sub> = {
 
                 * Nothing else can be inferred, since username alone cannot imply c_id, password is not an extraneous attribute, and must stay in the FD
 
-3) Therefore, R<sub>1</sub> = {c_id, shipping_address_id, billing_address_id, email_address, username, password}, R<sub>2</sub> = {email_address, first_name, last_name, c_id}, and R<sub>3</sub> = {username, password, c_id}.
+3) Therefore, R<sub>1</sub> = {c_id, shipping_address_id, billing_address_id, email_address, username, password}, R<sub>2</sub> = {email_address, first_name, last_name}, and R<sub>3</sub> = {username, password, c_id}.
 4) c_id from R<sub>1</sub> is a candidate key for the relation customer
 5) R<sub>3</sub> is a subset of R<sub>1</sub>, so it will be deleted, but R<sub>1</sub> and R<sub>2</sub> will persist and be the product of this decomposition...
 
 **customer**( <ins>c_id</ins>, shipping_address_id*, billing_address_id*, email_address*, username, password)
 
-**customer_email** (<ins>email_address</ins> , first_name, last_name, c_id)
+**customer_email** (<ins>email_address</ins> , first_name, last_name)
 
 ---
 ### Checkout 
@@ -1091,13 +1032,13 @@ F<sub>c</sub> = {
 
 **author**(<ins>a_id</ins>, email_address)
 
-**author_email**(<ins>email_address</ins>, first_name, last_name, a_id)
+**author_email**(<ins>email_address</ins>, first_name, last_name)
 
 **book_authors**(<ins>ISBN</ins>, <ins>a_id</ins>)
 
 **publisher** (<ins>p_id</ins>, address_id*, email_address*, bank_account*)
 
-**publisher_email** (<ins>email_address</ins>, name, p_id)
+**publisher_email** (<ins>email_address</ins>, name)
 
 **publisher_bank** (<ins>bank_account</ins>, account_value)
 
@@ -1105,7 +1046,7 @@ F<sub>c</sub> = {
 
 **owner**( <ins>o_id</ins>, email_address*, username, password)
 
-**owner_email**( <ins>email_address</ins>, first_name, last_name, o_id)
+**owner_email**( <ins>email_address</ins>, first_name, last_name)
 
 **reports**( <ins>r_id</ins>, o_id*, day, month, year, report_type, result)
 
@@ -1113,7 +1054,7 @@ F<sub>c</sub> = {
 
 **customer**( <ins>c_id</ins>, shipping_address_id*, billing_address_id*, email_address*, username, password)
 
-**customer_email** (<ins>email_address</ins> , first_name, last_name, c_id)
+**customer_email** (<ins>email_address</ins> , first_name, last_name)
 
 **checkout**( <ins>check_id</ins>, billing_address_id*, shipping_address_id*, c_id*, cart_id*, day, month, year)
 
