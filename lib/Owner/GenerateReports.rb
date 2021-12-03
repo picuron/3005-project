@@ -34,39 +34,36 @@ module Owner
       Helper.wait
     end
 
+    def get_report_menu
+      puts "\nHere are your options: \n"\
+      "\n[1] - Exit Program\n"\
+      "[2] - Exit to owner menu\n"\
+      "[3] - Generate Sales vs. Cost Report\n"\
+      "[4] - Generate Sales by Author Report\n"\
+      "[5] - Generate Sales by Genre Report\n"\
+    end
+
     #Main Method
     def execute
-      def get_phone_numbers_menu
-        puts "\nHere are your options: \n"\
-        "\n[1] - Exit Program\n"\
-        "[2] - Exit to owner menu\n"\
-        "[3] - Generate Sales vs. Cost Report\n"\
-        "[4] - Generate Sales by Author Report\n"\
-        "[5] - Generate Sales by Genre Report\n"\
-      end
-  
-      def get_phone_numbers
-        while true
-          get_phone_numbers_menu
-          input = gets.chomp
-          
-          case input
-          when '1'
-            Helper.exit_program
-          when '2'
-            OwnerController.new(@session_object_in, @login_session)
-          when '3'
-            generate_sales_vs_cost
-          when '4'
-            generate_sales_by_author
-          when '5'
-            generate_sales_by_genre
-          else
-            Helper.invalid_entry_display
-          end
+      while true
+        get_report_menu
+        input = gets.chomp
+        
+        case input
+        when '1'
+          Helper.exit_program
+        when '2'
+          OwnerController.new(@session_object_in, @login_session)
+        when '3'
+          generate_sales_vs_cost
+        when '4'
+          generate_sales_by_author
+        when '5'
+          generate_sales_by_genre
+        else
+          Helper.invalid_entry_display
         end
       end
-      Helper.wait
     end 
   end
 end
