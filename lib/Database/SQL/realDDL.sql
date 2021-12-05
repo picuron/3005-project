@@ -139,7 +139,7 @@ CREATE TABLE reports
     r_id           SERIAL,
     o_id           INT,
     day            SMALLINT NOT NULL CHECK (day > 0 and day < 32),
-    month          SMALLINT NOT NULL CHECK (month > 0 and day < 13),
+    month          SMALLINT NOT NULL CHECK (month > 0 and month < 13),
     year           SMALLINT NOT NULL CHECK (year > 1500 and year < 2022),
     report_type    VARCHAR(50) NOT NULL,
     result         VARCHAR(200) NOT NULL,
