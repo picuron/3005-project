@@ -139,7 +139,7 @@ CREATE TABLE reports
     r_id           SERIAL,
     o_id           INT,
     day            SMALLINT NOT NULL CHECK (day > 0 and day < 32),
-    month          VARCHAR(10) NOT NULL CHECK (month in ('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
+    month          SMALLINT NOT NULL CHECK (month > 0 and day < 13),
     year           SMALLINT NOT NULL CHECK (year > 1500 and year < 2022),
     report_type    VARCHAR(50) NOT NULL,
     result         VARCHAR(200) NOT NULL,
@@ -156,7 +156,7 @@ CREATE TABLE checkout
     c_id                INT NOT NULL, 
     cart_id             INT NOT NULL, 
     day                 SMALLINT NOT NULL CHECK (day > 0 and day < 32), 
-    month               VARCHAR(10) NOT NULL CHECK (month in ('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')), 
+    month               SMALLINT NOT NULL CHECK (month > 0 and month < 13),
     year                SMALLINT NOT NULL CHECK (year > 1500 and year < 2022),
     PRIMARY KEY (check_id),
     FOREIGN KEY (billing_address_id) REFERENCES address
@@ -174,8 +174,8 @@ CREATE TABLE orders
     order_number   SERIAL, 
     o_id           INT, 
     check_id       INT, 
-    cl_city        VARCHAR(20) NOT NULL,
-    cl_country     VARCHAR(20) NOT NULL,
+    cl_city        VARCHAR(40) NOT NULL,
+    cl_country     VARCHAR(40) NOT NULL,
     status         VARCHAR(20) NOT NULL,
     PRIMARY KEY (order_number),
     FOREIGN KEY (o_id) REFERENCES owner
