@@ -34,6 +34,13 @@ module Client
       rs.each do |row|
         puts "%s | %s | %s | %s | %s | %s" % [ row['address_id'], row['street_number'], row['street_name'], row['postal_code'], row['city'], row['country'] ]
       end
+
+      puts "Authors"
+      rs2 = connection_object.exec('SELECT * FROM author NATURAL JOIN author_phone_number NATURAL JOIN author_email')
+      rs2.each do |row|
+        puts "%s | %s | %s | %s | %s " % [ row['a_id'], row['phone_number'], row['email_address'], row['first_name'], row['last_name'] ]
+      end
+      
       @db.db_connection_close(connection_object)
       Helper.wait
     end
