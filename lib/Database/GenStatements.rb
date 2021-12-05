@@ -29,7 +29,7 @@ class GenStatements
       "INSERT INTO publisher              (address_id, email_address, bank_account)             VALUES ($1, $2, $3)"
     end
     def gen_book_statement               
-      "INSERT INTO book                   (isbn, p_id, title, genre, royalty, num_pages, price, cost, num_in_stock, threshold_num, num_sold) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
+      "INSERT INTO book                   (isbn, p_id, title, genre, royalty, num_pages, price, cost, num_in_stock, threshold_num, num_sold) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)"
     end
     def gen_owner_statement              
       "INSERT INTO owner                  (email_address, username, password)                   VALUES ($1, $2, $3)"
