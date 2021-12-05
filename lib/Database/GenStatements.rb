@@ -29,7 +29,7 @@ class GenStatements
       "INSERT INTO publisher              (address_id, email_address, bank_account)             VALUES ($1, $2, $3)"
     end
     def gen_book_statement               
-      "INSERT INTO book                   (isbn, p_id, title, genre, royalty, num_pages, price, cost, num_in_stock, threshold_num, num_sold) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
+      "INSERT INTO book                   (isbn, p_id, title, genre, royalty, num_pages, price, cost, num_in_stock, threshold_num, num_sold) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)"
     end
     def gen_owner_statement              
       "INSERT INTO owner                  (email_address, username, password)                   VALUES ($1, $2, $3)"
@@ -41,10 +41,10 @@ class GenStatements
       "INSERT INTO reports                (o_id, day, month, year, report_type, result)         VALUES ($1, $2, $3, $4, $5, $6)"
     end
     def gen_checkout_statement           
-      "INSERT INTO checkout               (billing_address_id, shipping_addres_id, c_id, cart_id, day, month, year) VALUES ($1, $2, $3, $4, $5, $6, $7)"
+      "INSERT INTO checkout               (billing_address_id, shipping_address_id, c_id, cart_id, day, month, year) VALUES ($1, $2, $3, $4, $5, $6, $7)"
     end
     def gen_orders_statment              
-      "INSERT INTO orders                 (o_id, check_id, cl_city, cl_country, status)         VALUES ($1, $2, $3, $4, $5)"
+      "INSERT INTO orders                 (check_id, cl_city, cl_country, status)         VALUES ($1, $2, $3, $4)"
     end
     def gen_cart_books_statement         
       "INSERT INTO cart_books             (cart_id, isbn)                                       VALUES ($1, $2)"
