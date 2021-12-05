@@ -29,11 +29,11 @@ module Client
     #Helper Functions
     def main_menu_case_2
       Helper.clear
-      # connection_object = @db.db_connection_open
-      # puts connection_object.exec('SELECT title FROM course').values
-      # @db.db_connection_close(connection_object)
       connection_object = @db.db_connection_open
-      puts connection_object.exec('SELECT title FROM course').values
+      rs = connection_object.exec('SELECT * FROM region NATURAL JOIN address')
+      rs.each do |row|
+        puts "%s | %s | %s | %s | %s | %s" % [ row['address_id'], row['street_number'], row['street_name'], row['postal_code'], row['city'], row['country'] ]
+      end
       @db.db_connection_close(connection_object)
       Helper.wait
     end

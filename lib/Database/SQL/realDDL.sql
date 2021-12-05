@@ -7,35 +7,35 @@ CREATE TABLE cart
 
 CREATE TABLE author_email
   (
-    email_address  VARCHAR(30),
-    first_name     VARCHAR(20) NOT NULL,
-    last_name      VARCHAR(20) NOT NULL,
+    email_address  VARCHAR(50),
+    first_name     VARCHAR(50) NOT NULL,
+    last_name      VARCHAR(50) NOT NULL,
     -- THINK ABOUT THIS MORE
     PRIMARY KEY (email_address)
   );
 
 CREATE TABLE owner_email
   (
-    email_address  VARCHAR(30),
-    first_name     VARCHAR(20) NOT NULL,
-    last_name      VARCHAR(20) NOT NULL,
+    email_address  VARCHAR(50),
+    first_name     VARCHAR(50) NOT NULL,
+    last_name      VARCHAR(50) NOT NULL,
         -- THINK ABOUT THIS MORE
     PRIMARY KEY (email_address)
   );
 
 CREATE TABLE publisher_email
   (
-    email_address  VARCHAR(30),
-    name           VARCHAR(30) NOT NULL,
+    email_address  VARCHAR(50),
+    name           VARCHAR(50) NOT NULL,
         -- THINK ABOUT THIS MORE
     PRIMARY KEY (email_address)         
   );
 
 CREATE TABLE customer_email
   (
-    email_address VARCHAR(30), 
-    first_name    VARCHAR(20) NOT NULL, 
-    last_name     VARCHAR(20) NOT NULL, 
+    email_address VARCHAR(50), 
+    first_name    VARCHAR(50) NOT NULL, 
+    last_name     VARCHAR(50) NOT NULL, 
         -- THINK ABOUT THIS MORE
     PRIMARY KEY (email_address)
   );
@@ -50,8 +50,8 @@ CREATE TABLE publisher_bank
 CREATE TABLE region
   (
     postal_code VARCHAR(6), 
-    city        VARCHAR(30) NOT NULL, 
-    country     VARCHAR(30) NOT NULL,
+    city        VARCHAR(50) NOT NULL, 
+    country     VARCHAR(50) NOT NULL,
     PRIMARY KEY (postal_code)
   );
 
@@ -59,7 +59,7 @@ CREATE TABLE region
 CREATE TABLE address
   (
     address_id      SERIAL, 
-    street_number   SMALLINT NOT NULL, 
+    street_number   VARCHAR(8) NOT NULL, 
     street_name     VARCHAR(50) NOT NULL, 
     postal_code     VARCHAR(6) NOT NULL,
     PRIMARY KEY (address_id),
@@ -71,7 +71,7 @@ CREATE TABLE address
 CREATE TABLE author
   (
     a_id           SERIAL,
-    email_address  VARCHAR(30),
+    email_address  VARCHAR(50),
     PRIMARY KEY (a_id),
     FOREIGN KEY (email_address) REFERENCES author_email
     ON DELETE SET NULL
@@ -81,7 +81,7 @@ CREATE TABLE publisher
   (
     p_id           SERIAL,
     address_id     INT,
-    email_address  VARCHAR(30),
+    email_address  VARCHAR(50),
     bank_account   INT,
     PRIMARY KEY (p_id),
     FOREIGN KEY (address_id) REFERENCES address
@@ -97,7 +97,7 @@ CREATE TABLE book
     isbn           INT,   
     p_id           INT,
     title          VARCHAR(80) NOT NULL,
-    genre          VARCHAR(20) NOT NULL,
+    genre          VARCHAR(50) NOT NULL,
     royalty        NUMERIC(4,2) NOT NULL CHECK (royalty >= 0 and royalty <= 100),
     num_pages      SMALLINT NOT NULL CHECK (num_pages > 0),
     price          NUMERIC(6,2) NOT NULL CHECK (price >= 0),
@@ -113,9 +113,9 @@ CREATE TABLE book
 CREATE TABLE owner
   (
     o_id           SERIAL,
-    email_address  VARCHAR(30),
-    username       VARCHAR(30) NOT NULL,
-    password       VARCHAR(30) NOT NULL,
+    email_address  VARCHAR(50),
+    username       VARCHAR(50) NOT NULL,
+    password       VARCHAR(50) NOT NULL,
     PRIMARY KEY (o_id),
     FOREIGN KEY (email_address) REFERENCES owner_email
     ON DELETE SET NULL
@@ -126,9 +126,9 @@ CREATE TABLE customer
     c_id                  SERIAL, 
     shipping_address_id   INT, 
     billing_address_id    INT,
-    email_address         VARCHAR(30),
-    username              VARCHAR(30) NOT NULL,
-    password              VARCHAR(30) NOT NULL,
+    email_address         VARCHAR(50),
+    username              VARCHAR(50) NOT NULL,
+    password              VARCHAR(50) NOT NULL,
     PRIMARY KEY (c_id),
     FOREIGN KEY (shipping_address_id) REFERENCES address
     ON DELETE SET NULL,
@@ -145,7 +145,7 @@ CREATE TABLE reports
     day            SMALLINT NOT NULL CHECK (day > 0 and day < 32),
     month          VARCHAR(10) NOT NULL CHECK (month in ('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
     year           SMALLINT NOT NULL CHECK (year > 1500 and year < 2022),
-    report_type    VARCHAR(30) NOT NULL,
+    report_type    VARCHAR(50) NOT NULL,
     result         VARCHAR(200) NOT NULL,
     PRIMARY KEY (r_id),
     FOREIGN KEY (o_id) REFERENCES owner
@@ -192,7 +192,7 @@ CREATE TABLE orders
 
 CREATE TABLE cart_books
   (
-    cart_id        SERIAL,
+    cart_id        INT,
     isbn           INT,
     PRIMARY KEY (cart_id, isbn),
     FOREIGN KEY (cart_id) REFERENCES cart
@@ -217,7 +217,7 @@ CREATE TABLE book_author
 CREATE TABLE author_phone_number
   (
     a_id           INT,
-    phone_number   INT,
+    phone_number   VARCHAR(30),
     PRIMARY KEY (a_id, phone_number),
     FOREIGN KEY (a_id) REFERENCES author
     ON DELETE CASCADE
@@ -226,7 +226,7 @@ CREATE TABLE author_phone_number
 CREATE TABLE owner_phone_number
   (
     o_id           INT,
-    phone_number   INT,
+    phone_number   VARCHAR(30),
     PRIMARY KEY (o_id, phone_number),
     FOREIGN KEY (o_id) REFERENCES owner
     ON DELETE CASCADE
@@ -235,7 +235,7 @@ CREATE TABLE owner_phone_number
 CREATE TABLE customer_phone_number
   (
     c_id           INT,
-    phone_number   INT,
+    phone_number   VARCHAR(30),
     PRIMARY KEY (c_id, phone_number),
     FOREIGN KEY (c_id) REFERENCES customer
     ON DELETE CASCADE
@@ -244,7 +244,7 @@ CREATE TABLE customer_phone_number
 CREATE TABLE publisher_phone_number
   (
     p_id           INT,
-    phone_number   INT,
+    phone_number   VARCHAR(30),
     PRIMARY KEY (p_id, phone_number),
     FOREIGN KEY (p_id) REFERENCES publisher
     ON DELETE CASCADE
