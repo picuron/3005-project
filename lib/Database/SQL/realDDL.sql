@@ -10,7 +10,6 @@ CREATE TABLE author_email
     email_address  VARCHAR(50),
     first_name     VARCHAR(50) NOT NULL,
     last_name      VARCHAR(50) NOT NULL,
-    -- THINK ABOUT THIS MORE
     PRIMARY KEY (email_address)
   );
 
@@ -19,7 +18,6 @@ CREATE TABLE owner_email
     email_address  VARCHAR(50),
     first_name     VARCHAR(50) NOT NULL,
     last_name      VARCHAR(50) NOT NULL,
-        -- THINK ABOUT THIS MORE
     PRIMARY KEY (email_address)
   );
 
@@ -27,7 +25,6 @@ CREATE TABLE publisher_email
   (
     email_address  VARCHAR(50),
     name           VARCHAR(50) NOT NULL,
-        -- THINK ABOUT THIS MORE
     PRIMARY KEY (email_address)         
   );
 
@@ -36,7 +33,6 @@ CREATE TABLE customer_email
     email_address VARCHAR(50), 
     first_name    VARCHAR(50) NOT NULL, 
     last_name     VARCHAR(50) NOT NULL, 
-        -- THINK ABOUT THIS MORE
     PRIMARY KEY (email_address)
   );
 
@@ -50,8 +46,8 @@ CREATE TABLE publisher_bank
 CREATE TABLE region
   (
     postal_code VARCHAR(6), 
-    city        VARCHAR(50) NOT NULL, 
-    country     VARCHAR(50) NOT NULL,
+    city        VARCHAR(100) NOT NULL, 
+    country     VARCHAR(100) NOT NULL,
     PRIMARY KEY (postal_code)
   );
 
@@ -60,7 +56,7 @@ CREATE TABLE address
   (
     address_id      SERIAL, 
     street_number   VARCHAR(8) NOT NULL, 
-    street_name     VARCHAR(50) NOT NULL, 
+    street_name     VARCHAR(100) NOT NULL, 
     postal_code     VARCHAR(6) NOT NULL,
     PRIMARY KEY (address_id),
     FOREIGN KEY (postal_code) REFERENCES region
