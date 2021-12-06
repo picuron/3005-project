@@ -4,14 +4,7 @@ require_relative './RemoveBooks.rb'
 require_relative '../../Database/ClientQueries/CartQueries.rb'
 
 module Client
-  class CartController
-    def initialize(session_object_in, cart_id)
-      @session = session_object_in
-      @cart = cart_id
-      Helper.clear
-      execute
-    end
-
+  class Cart 
     def fetch_cart(cart_id)
       con = @session.db_connection_open
       cart = CartQueries.new(con).my_cart(cart_id)
@@ -26,6 +19,31 @@ module Client
       end
       puts cart_items
     end
+  end
+
+
+  class CartController < Cart
+    def initialize(session_object_in, cart_id)
+      @session = session_object_in
+      @cart = cart_id
+      Helper.clear
+      execute
+    end
+
+    # def fetch_cart(cart_id)
+    #   con = @session.db_connection_open
+    #   cart = CartQueries.new(con).my_cart(cart_id)
+    #   @session.db_connection_close(con)
+    #   return cart
+    # end
+
+    # def print_cart(cart_records)
+    #   cart_items = []
+    #   cart_records.each do |book|
+    #     cart_items << book
+    #   end
+    #   puts cart_items
+    # end
 
     private
     # Helper Functions
@@ -35,7 +53,7 @@ module Client
 
       print_cart(fetch_cart(@cart))
 
-      "\nWhat would you like to do?\n"\
+      puts "\nWhat would you like to do?\n"\
       "[1] - Proceed to Checkout\n"\
       "[2] - Remove Books From Cart\n"\
       "[3] - Return To Main Menu \n"
@@ -49,7 +67,7 @@ module Client
         when '1'
           Checkout.new(@session)
         when '2' 
-          RemoveBooks.new(@session)
+          RemoveBooks.new(@session, @cart)
         when '3'
           break
         else
