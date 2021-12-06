@@ -182,7 +182,7 @@ module Database
 
         # Theres a chance two of the same authors could be picked. This should trap this case.
         begin
-          @con.exec_params(GenStatements.gen_book_author, [isbn, author_id])
+          @con.exec_params(GenStatements.gen_author_books, [isbn, author_id])
         rescue => exception
         end
         

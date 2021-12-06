@@ -49,8 +49,8 @@ class GenStatements
     def gen_cart_books_statement         
       "INSERT INTO cart_books             (cart_id, isbn)                                       VALUES ($1, $2)"
     end
-    def gen_book_author                  
-      "INSERT INTO book_author            (isbn, a_id)                                          VALUES ($1, $2)"
+    def gen_author_books                  
+      "INSERT INTO author_books           (isbn, a_id)                                          VALUES ($1, $2)"
     end
     def gen_author_phone_number          
       "INSERT INTO author_phone_number    (a_id, phone_number)                                  VALUES ($1, $2)"

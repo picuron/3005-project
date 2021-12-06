@@ -1,13 +1,13 @@
 require_relative '../HelperLib/Helper.rb'
 require_relative './Orders.rb'
-require_relative './SearchForBooks.rb'
 require_relative './BrowseBooks.rb'
 require_relative './Cart/CartController.rb'
 
 module Client
   class ClientController
     def initialize(session_object_in)
-      @db = session_object_in
+      @session = session_object_in
+      @cart = nil
       Helper.clear
       execute
     end
@@ -29,19 +29,13 @@ module Client
     #Helper Functions
     def main_menu_case_2
       Helper.clear
-      connection_object = @db.db_connection_open
+      connection_object = @session.db_connection_open
       rs = connection_object.exec('SELECT * FROM region NATURAL JOIN address')
       rs.each do |row|
         puts "%s | %s | %s | %s | %s | %s" % [ row['address_id'], row['street_number'], row['street_name'], row['postal_code'], row['city'], row['country'] ]
       end
-
-      puts "Authors"
-      rs2 = connection_object.exec('SELECT * FROM author NATURAL JOIN author_phone_number NATURAL JOIN author_email')
-      rs2.each do |row|
-        puts "%s | %s | %s | %s | %s " % [ row['a_id'], row['phone_number'], row['email_address'], row['first_name'], row['last_name'] ]
-      end
       
-      @db.db_connection_close(connection_object)
+      @session.db_connection_close(connection_object)
       Helper.wait
     end
 
@@ -54,17 +48,18 @@ module Client
         when '1'
           Helper.exit_program
         when '2'
-          BookStoreController.new.initalize(@db)
+          BookStoreController.new(@session)
         when '3'
           main_menu_case_2
         when '4'
-          BrowseBooks.new(@db)
+          # i dont like this patter, but im not sure how to maintain cart state
+          @cart = BrowseBooks.new(@session, @cart).cart
         when '5'
-          SearchForBooks.new(@db)
+          SearchForBooks.new(@session)
         when '6'
-          CartController.new(@db)
+          CartController.new(@session, @cart)
         when '7'
-          Oders.new(@db)
+          Oders.new(@session)
         else
           Helper.invalid_entry_display
         end

@@ -174,8 +174,8 @@ CREATE TABLE orders
     order_number   SERIAL, 
     o_id           INT, 
     check_id       INT, 
-    cl_city        VARCHAR(40) NOT NULL,
-    cl_country     VARCHAR(40) NOT NULL,
+    cl_city        VARCHAR(80) NOT NULL,
+    cl_country     VARCHAR(80) NOT NULL,
     status         VARCHAR(20) NOT NULL,
     PRIMARY KEY (order_number),
     FOREIGN KEY (o_id) REFERENCES owner
@@ -197,7 +197,7 @@ CREATE TABLE cart_books
     ON DELETE CASCADE
   );
 
-CREATE TABLE book_author
+CREATE TABLE author_books
   (
     isbn           INT,
     a_id           INT,
