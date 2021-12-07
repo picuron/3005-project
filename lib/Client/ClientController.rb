@@ -1,6 +1,7 @@
 require_relative '../HelperLib/Helper.rb'
 require_relative './Orders.rb'
 require_relative './BrowseBooks.rb'
+require_relative './SearchForBooks.rb'
 require_relative './Cart/CartController.rb'
 
 module Client

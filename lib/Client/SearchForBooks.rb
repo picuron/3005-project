@@ -1,10 +1,11 @@
 require_relative '../HelperLib/Helper.rb'
-require_relative '../HelperLib/QueryHelp/BooksQueryHelper.rb'
+require_relative '../Database/ClientQueries/SearchForBooksQueries.rb'
+
 
 module Client
   class SearchForBooks
     def initialize(session_object_in)
-      @db = session_object_in
+      @session = session_object_in
       Helper.clear
       execute
     end
@@ -18,7 +19,8 @@ module Client
       "[2] - Author Name\n"\
       "[3] - ISBN# \n"\
       "[4] - Genre \n"\
-      "[5] - Return To Main Menu \n"
+      "[5] - Publisher \n"\
+      "[6] - Return To Main Menu \n"
     end
 
     #Book Search Menu Case Functionality
@@ -26,8 +28,15 @@ module Client
       Helper.clear
       puts "What #{key} would you like to search for?\n"
       value = gets.chomp
-      puts "Here are all of books with #{key} #{value}"
-      Helper::BooksQueryHelper.new(@db).query_for_books_by_param("#{key}", "#{value}")
+      puts "Here are our 5 closest matches to #{key}: #{value}"
+      con = @session.db_connection_open
+      books = SearchForBooksQueries.new(con, @cart).books_by_similar_value(key, value)
+      @session.db_connection_close(con)
+      books_array = []
+      books.each do |book|
+        books_array << book
+      end
+      puts books_array
       Helper.wait
     end
 
@@ -45,6 +54,8 @@ module Client
         when '4'
           search_by('genre')
         when '5'
+          search_by('name')
+        when '6'
           break
         else 
           Helper.invalid_entry_display
@@ -54,8 +65,6 @@ module Client
 
     #Main Method
     def execute
-      puts "In SearchBooks Execute"
-      Helper.wait
       search_controller
       Helper.wait
     end 
