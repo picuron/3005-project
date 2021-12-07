@@ -24,7 +24,7 @@ CREATE TABLE owner_email
 CREATE TABLE publisher_email
   (
     email_address  VARCHAR(50),
-    name           VARCHAR(50) NOT NULL,
+    name           VARCHAR(50) UNIQUE NOT NULL,
     PRIMARY KEY (email_address)         
   );
 
@@ -92,7 +92,7 @@ CREATE TABLE book
   (
     isbn           INT,   
     p_id           INT,
-    title          VARCHAR(80) NOT NULL,
+    title          VARCHAR(80) NOT NULL UNIQUE,
     genre          VARCHAR(50) NOT NULL,
     royalty        NUMERIC(4,2) NOT NULL CHECK (royalty >= 0 and royalty <= 100),
     num_pages      SMALLINT NOT NULL CHECK (num_pages > 0),

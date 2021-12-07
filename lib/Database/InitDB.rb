@@ -73,12 +73,17 @@ module Database
       puts "--- All Tables Generated ---"
     end
 
-    # def populate_all_tables(connection)
-    #   puts "--- Populating All Tables ---"
-    #   connection.exec(File.read("./Database/SQL/realRelationsInsert.sql"))
-    #   puts " we have no data yet "
-    #   puts "--- All Tables Populated ---"
-    # end
+    def create_fuzzy_string_extension(connection)
+      puts "installing fuzzy string"
+      begin
+        connection.exec("CREATE EXTENSION fuzzystrmatch")
+      rescue StandardError => e
+        puts "#{e}"
+        puts "Skipping install"
+      else
+        puts "installed."
+      end
+    end
     
     def init_db(db_session)
       begin 
@@ -86,7 +91,7 @@ module Database
 
         drop_all_tables(con)
         generate_all_tables(con)
-        #populate_all_tables(con)
+        create_fuzzy_string_extension(con)
         PopulateDB.new.initalize(con)
 
       rescue PG::Error => e
