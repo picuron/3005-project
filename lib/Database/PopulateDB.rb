@@ -52,6 +52,8 @@ module Database
         author_id = prep_result('a_id', 'author', 'email_address', email).values[0][0].to_i
         @con.exec_params(GenStatements.gen_author_phone_number, [author_id, phone])
         return author_id
+      else
+        puts "Edge case resolved: Duplicate randomly generated author email detected."
       end
       return NULL # not sure what to do in this case
     end
@@ -68,6 +70,8 @@ module Database
 
         publisher_id = (@con.exec("SELECT p_id FROM publisher ORDER BY p_id DESC LIMIT 1")).values[0][0];
         @con.exec_params(GenStatements.gen_publisher_phone_number, [publisher_id, phone])
+      else
+        puts "Edge case resolved: Duplicate randomly generated publisher unique value detected."
       end
     end
 
@@ -166,9 +170,11 @@ module Database
 
       publisher_id = get_random_publisher
 
-      if is_valid_insert("book", "isbn", isbn)
+      if is_valid_insert("book", "isbn", isbn) && is_valid_insert("book", "title", title)
         # THRESHOLD NUMBER IS BEING SET TO 0. Not sure whats the right behvaiour..
         @con.exec_params(GenStatements.gen_book_statement, [isbn, publisher_id, title, genre, royalty, num_pages, price, cost, num_in_stock, 0, num_sold])
+      else
+        puts "Edge case resolved: Duplicate randomly generated book value detected."
       end
 
       num_authors = rand(1..3)
