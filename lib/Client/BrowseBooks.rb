@@ -4,9 +4,14 @@ require_relative '../Database/ClientQueries/BrowseBooksQueries.rb'
 module Client
   class BrowseBooks
     attr_accessor :cart
-    def initialize(session_object_in, cart)
-      @session = session_object_in
+    attr_accessor :session
+    attr_accessor :user
+    attr_accessor :state
+    def initialize(session, cart, user)
+      @session = session
       @cart = cart
+      @user = user
+      @state = {"session" => @session, "cart" => @cart, "user" => @user}
       Helper.clear
       execute
     end
@@ -47,7 +52,7 @@ module Client
     end
 
     def add_to_cart_by_isbn(isbn)
-      Helper.clear 
+      Helper.clear
       con = @session.db_connection_open
       @cart = BrowseBooksQueries.new(con).add_to_cart(isbn, @cart)
       @session.db_connection_close(con)
@@ -75,29 +80,44 @@ module Client
       puts books_array
     end
 
+    def see_book_details(book, authors)
+      Helper.clear
+      show_book_and_authors(book, authors)
+      choice = nil
+      until (choice == '1' || choice == '0') do
+        puts "\nWould you like to add this book to your Cart? \n"\
+        "[0] - No, Return to Book List\n"\
+        "[1] - Yes, Add to Cart\n"
+        choice = gets.chomp
+      end
+      return choice
+    end
+
     def choose_a_book
       puts "\nEnter an ISBN to see more about a book, or press 'enter' to go back to the menu."
       isbn = gets.chomp
       if isbn == ''
         return false
+      elsif isbn.length != 9
+        puts "Sorry, isbn's should be 9 characters long"
+        choose_a_book
+      elsif isbn.to_i == 0
+        puts "Sorry, isbn's are only numerical"
+        choose_a_book
       else
         book = fetch_book(isbn)
-        authors = fetch_authors(isbn)
-        Helper.clear
-        if book != nil
-          show_book_and_authors(book, authors)
-          puts "\nWould you like to add this book to your Cart? \n"\
-          "[0] - No, Return to Book List\n"\
-          "[1] - Yes, Add to Cart\n"
-          choice = gets.chomp
-          case choice
-          when '0'
-            return true
-          when '1'
-            add_to_cart_by_isbn(isbn)
-          end
+        if book.values.length == 0
+          puts "Sorry, can't find that one."
+          choose_a_book
         else
-          puts "Sorry, that isbn cannot be found..."
+          authors = fetch_authors(isbn)
+          choice = see_book_details(book, authors)
+          case choice
+            when '0'
+              true
+            when '1'
+              add_to_cart_by_isbn(isbn)
+          end
         end
       end
     end
@@ -106,14 +126,12 @@ module Client
     #Main Method
     def execute
       return_to_book_display = true
-      while return_to_book_display  
+      while return_to_book_display
         query_for_books_by_param("", "")
         return_to_book_display = choose_a_book
       end
-      #We will return our cart instance, because it may have been updated 
-      #while in this menu, we will reset the cart_id instance var at the 
-      #Client controller level. 
-      return @cart
-    end 
+      #updates the state as we exit file
+      @state = {"session" => @session, "cart" => @cart, "user" => @user}
+    end
   end
 end

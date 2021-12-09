@@ -5,7 +5,7 @@ require './BookStoreController'
 # DO NOT CHANGE THIS CLASS. User flow begins in BookStoreController. This classes only purpose is to initalize the BookStoreController
 class Initalizer
 
-  BookStoreController.new.initalize
+  BookStoreController.new
 
 end
 
