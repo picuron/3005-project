@@ -1,5 +1,6 @@
 require_relative '../../HelperLib/Helper.rb'
 require_relative './LoginRegister.rb'
+require_relative '../../Database/ClientQueries/CheckoutQueries.rb'
 
 module Client
   class Checkout
@@ -31,7 +32,7 @@ module Client
       return cart
     end
 
-    def get_addr_info(addr_type)
+    def get_addr_hash(addr_type)
       puts "#{addr_type} street number: "
       street_number = gets.chomp
       puts "#{addr_type} street name: "
@@ -60,35 +61,56 @@ module Client
       get_addr_hash("Shipping")
     end
 
-    def launch_checkout
-      puts "\n Will your billling / shipping address be the same as your registered address?"
-      puts "[1] - Yes \n[2] - No"
-      input gets.chomp
-      case input
-      when '1'
+    def checkout_user_and_cart(shipping_hash = nil, billing_hash = nil)
+      con = @session.db_connection_open
+      success = CheckoutQueries.new(con).generate_checkout_success?(@user, @cart, shipping_hash, billing_hash)
+      @session.db_connection_close(con)
+      if success
+        #delete the cart, will make a new one next time a book gets added.
+        @cart = nil
+      end
+    end
 
-      when '2'
-        billing_hash = get_billing_info
-        shipping_hash = nil
-        puts "Is your Shipping Address the Same as Your Billing Address ?"
-        puts "[1] - Yes\n[2] - No"
-        same = gets.chomp
-        case same
-        when '1'
-          shipping_hash = {
-            "shipping_street_number" =>  billing_hash["billing_street_number"],
-            "shipping_street_name" => billing_hash["billing_street_name"],
-            "shipping_postal_code" => billing_hash["billing_postal_code"],
-            "shipping_city" => billing_hash["billing_city"],
-            "shipping_country" => billing_hash["billing_country"]
-          }
-        when '2'
-          shipping_hash = get_shipping_hash
-        else
-          Helper.invalid_entry_display
+    def launch_checkout
+      while true
+        puts "\n Will your billling / shipping address be the same as your registered address?"
+        puts "[1] - Yes \n[2] - No"
+        input = gets.chomp
+        case input
+          when '1'
+            #generates a checkout object
+            checkout_user_and_cart
+            break
+          when '2'
+            billing_hash = get_billing_info
+            shipping_hash = nil
+            while true
+              puts "Is your Shipping Address the Same as Your Billing Address ?"
+              puts "[1] - Yes\n[2] - No"
+              same = gets.chomp
+              case same
+                when '1'
+                  shipping_hash = {
+                    "shipping_street_number" =>  billing_hash["billing_street_number"],
+                    "shipping_street_name" => billing_hash["billing_street_name"],
+                    "shipping_postal_code" => billing_hash["billing_postal_code"],
+                    "shipping_city" => billing_hash["billing_city"],
+                    "shipping_country" => billing_hash["billing_country"]
+                  }
+                  break
+                when '2'
+                  shipping_hash = get_shipping_hash
+                  break
+                else
+                  Helper.invalid_entry_display
+              end
+            end
+            #this time provide alternate hashes
+            checkout_user_and_cart(shipping_hash, billing_hash)
+            break
+          else
+            Helper.invalid_entry_display
         end
-      else
-        Helper.invalid_entry_display
       end
     end
 

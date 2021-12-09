@@ -14,7 +14,7 @@ module Database
         @password = password_in
       end
     end
-    
+
     def connect
       db_session = connect_to_db
       if should_init_db?
@@ -26,14 +26,14 @@ module Database
     private
     def should_init_db?
       puts "Would you like to initalize the database? (Y/N)"
-      while user_input = gets.chomp 
+      while user_input = gets.chomp
         case user_input
         when "Y"
           return true
-          break 
+          break
         when "N"
           return false
-          break 
+          break
         else
           puts "Invalid Input. Enter Y or N."
         end
@@ -78,15 +78,15 @@ module Database
       begin
         connection.exec("CREATE EXTENSION fuzzystrmatch")
       rescue StandardError => e
-        puts "#{e}"
+        #puts "#{e}"
         puts "Skipping install"
       else
         puts "installed."
       end
     end
-    
+
     def init_db(db_session)
-      begin 
+      begin
         con = db_connection_open(db_session)
 
         drop_all_tables(con)
@@ -95,25 +95,25 @@ module Database
         PopulateDB.new.initalize(con)
 
       rescue PG::Error => e
-        puts e.message 
+        puts e.message
       ensure
-        if con 
+        if con
           con.close
         end
       end
     end
 
     def db_connection_open(db_session)
-      begin 
-        connectionObject = PG.connect( 
-          :dbname => db_session.db_name, 
-          :user => db_session.username, 
+      begin
+        connectionObject = PG.connect(
+          :dbname => db_session.db_name,
+          :user => db_session.username,
           :password => db_session.password
         )
       return connectionObject
       rescue PG::Error => e
-        puts e.message 
-      end 
+        puts e.message
+      end
     end
 
     def connect_to_db
@@ -133,7 +133,7 @@ module Database
           con = db_connection_open(db_session)
 
           if db_session
-            emptySession = false 
+            emptySession = false
           end
 
           puts "\e[2J\e[fDatabase connection success!"
@@ -143,7 +143,7 @@ module Database
               "The following error message was generated: #{e.message} \n Please Try Again.\n\n"
               next
           ensure
-            if con 
+            if con
               con.close
             end
           end
