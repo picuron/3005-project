@@ -2,8 +2,15 @@ require_relative '../HelperLib/Helper.rb'
 
 module Client
   class Orders
-    def initialize(session_object_in)
-      @db = session_object_in
+    attr_accessor :cart
+    attr_accessor :session
+    attr_accessor :user
+    attr_accessor :state
+    def initialize(session, cart, user)
+      @session = session
+      @cart = cart
+      @user = user
+      @state = {"session" => @session, "cart" => @cart, "user" => @user}
       Helper.clear
       message
       execute
@@ -19,6 +26,8 @@ module Client
     def execute
       puts "In Orders Execute"
       Helper.wait
-    end 
+      #updates the state as we exit file
+      @state = {"session" => @session, "cart" => @cart, "user" => @user}
+    end
   end
 end
