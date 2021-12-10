@@ -235,11 +235,11 @@ module Database
         #(check_id, cl_city, cl_country, status)
         checkout_id = (@con.exec("SELECT check_id FROM checkout ORDER BY cart_id DESC LIMIT 1")).values[0][0]
 
-        #1/4 chance of not being fulfilled yet
-        if rand(0..3) == 1
-          @con.exec_params(GenStatements.gen_orders_statment, [checkout_id, "At Warehouse", "At Warehouse", "Unfulfilled"])
+        #1/2 chance of not being fulfilled yet
+        if rand(0..1) == 1
+          @con.exec_params(GenStatements.gen_orders_statment, [checkout_id, "At Warehouse", "At Warehouse", "UNFULFILLED"])
         else
-          @con.exec_params(GenStatements.gen_orders_statment, [checkout_id, Faker::Address.city, Faker::Address.country, "Shipped"])
+          @con.exec_params(GenStatements.gen_orders_statment, [checkout_id, Faker::Address.city, Faker::Address.country, "SHIPPED"])
         end
 
         puts "New cart and checkout created."
