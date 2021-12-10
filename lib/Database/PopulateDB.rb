@@ -233,7 +233,7 @@ module Database
 
         # Create order
         #(check_id, cl_city, cl_country, status)
-        checkout_id = (@con.exec("SELECT check_id FROM checkout ORDER BY cart_id DESC LIMIT 1")).values[0][0]
+        checkout_id = (@con.exec("SELECT check_id FROM checkout ORDER BY check_id DESC LIMIT 1")).values[0][0]
 
         #1/2 chance of not being fulfilled yet
         if rand(0..1) == 1

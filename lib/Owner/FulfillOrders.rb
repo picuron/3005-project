@@ -104,7 +104,7 @@ module Owner
       if index < 0
         puts "You cannot go back further."
         # index += 5
-      elsif index > orders.length
+      elsif index >= orders.length
         puts "You have already viewed all orders."
         # index -= 5
       else
