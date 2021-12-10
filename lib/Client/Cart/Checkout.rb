@@ -61,14 +61,48 @@ module Client
       get_addr_hash("Shipping")
     end
 
-    def checkout_user_and_cart(shipping_hash = nil, billing_hash = nil)
+    def checkout_user_and_cart(date_hash, shipping_hash = nil, billing_hash = nil)
       con = @session.db_connection_open
-      success = CheckoutQueries.new(con).generate_checkout_success?(@user, @cart, shipping_hash, billing_hash)
+      success = CheckoutQueries.new(con).generate_checkout_success?(date_hash, @user, @cart, shipping_hash, billing_hash)
       @session.db_connection_close(con)
       if success
-        #delete the cart, will make a new one next time a book gets added.
+        puts "Return to Menu to View your Orders"
         @cart = nil
       end
+    end
+
+    def get_date_hash
+      date = {}
+      Helper.clear
+      puts "We were silly, and designed this whole things without using Date objects, but now it is too late, so..."
+      while true
+        puts "Day (1 -> 31): "
+        date["day"] = gets.chomp.to_i
+        if date["day"] < 1 || date["day"] > 31
+          puts "Invalid day, try again."
+        else
+          break
+        end
+      end
+      while true
+        puts "Month (1 -> 12): "
+        date["month"] = gets.chomp.to_i
+        if date["month"] < 1 || date["month"]> 12
+          puts "Invalid Month, Try Again."
+        else
+          break
+        end
+      end
+      while true
+        puts "Year: "
+        date["year"] = gets.chomp.to_i
+        if date["year"] < 1500 || date["year"] > 2022
+          puts "Invalid Year, Try Again."
+        else
+          break
+        end
+      end
+      return date
     end
 
     def launch_checkout
@@ -79,7 +113,8 @@ module Client
         case input
           when '1'
             #generates a checkout object
-            checkout_user_and_cart
+            date_hash = get_date_hash
+            checkout_user_and_cart(date_hash)
             break
           when '2'
             billing_hash = get_billing_info
@@ -106,7 +141,8 @@ module Client
               end
             end
             #this time provide alternate hashes
-            checkout_user_and_cart(shipping_hash, billing_hash)
+            date_hash = get_date_hash
+            checkout_user_and_cart(date_hash, shipping_hash, billing_hash)
             break
           else
             Helper.invalid_entry_display

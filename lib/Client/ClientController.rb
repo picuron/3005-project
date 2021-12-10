@@ -60,7 +60,7 @@ module Client
           @cart = state["cart"]
           @user = state["user"]
         when '6'
-          state = Oders.new(@session, @cart, @user).state
+          state = Orders.new(@session, @cart, @user).state
           puts "state = #{state.values}"
           @session = state["session"]
           @cart = state["cart"]
