@@ -56,9 +56,17 @@ module Client
           input = gets.chomp
           case input
           when '1'
-            Checkout.new(@session, @cart, @user)
+            state = Checkout.new(@session, @cart, @user).state
+            puts "state = #{state.values}"
+            @session = state["session"]
+            @cart = state["cart"]
+            @user = state["user"]
           when '2'
-            RemoveBooks.new(@session, @cart, @user)
+            state = RemoveBooks.new(@session, @cart, @user).state
+            puts "state = #{state.values}"
+            @session = state["session"]
+            @cart = state["cart"]
+            @user = state["user"]
           when '3'
             break
           else
