@@ -61,11 +61,18 @@ module Client
       get_addr_hash("shipping")
     end
 
+    def uptick_num_solds
+      con = @session.db_connection_open
+      CheckoutQueries.new(con).uptick_num_solds(@cart)
+      @session.db_connection_close(con)
+    end
+
     def checkout_user_and_cart(date_hash, shipping_hash = nil, billing_hash = nil)
       con = @session.db_connection_open
       success = CheckoutQueries.new(con).generate_checkout_success?(date_hash, @user, @cart, shipping_hash, billing_hash)
       @session.db_connection_close(con)
       if success
+        uptick_num_solds
         puts "Return to Menu to View your Orders"
         @cart = nil
       end
