@@ -1,7 +1,6 @@
 require 'pg'
 require 'io/console'
 require_relative '../GenStatements.rb'
-require 'pry'
 
 module Client
   class CheckoutQueries
@@ -35,7 +34,6 @@ module Client
         royalty = @con.exec("SELECT royalty "\
           "FROM book "\
           "WHERE book.isbn = #{isbn["isbn"]}").values[0][0]
-          #binding.pry
         @con.exec("UPDATE publisher_bank "\
           "SET account_value = account_value + #{price.to_f*royalty.to_f} "\
           "WHERE bank_account = #{publisher_bank_account.to_i}")

@@ -1,6 +1,5 @@
 require_relative '../HelperLib/Helper.rb'
 require_relative '../Database/ClientQueries/OrdersQueries.rb'
-require 'pry'
 
 module Client
   class Orders
