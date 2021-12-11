@@ -24,10 +24,8 @@ module Client
           "WHERE isbn = $1"
         @con.exec_params(statement2, [isbn["isbn"]])
         # pay the publisher of the given book
-        publisher_bank_account = @con.exec("SELECT account_value "\
-          "FROM publisher_bank "\
-          "JOIN publisher "\
-          "ON publisher_bank.bank_account = publisher.bank_account "\
+        publisher_bank_account = @con.exec("SELECT bank_account "\
+          "FROM publisher "\
           "JOIN book "\
           "ON publisher.p_id = book.p_id "\
           "WHERE book.isbn = #{isbn["isbn"]}").values[0][0]
@@ -40,33 +38,39 @@ module Client
           #binding.pry
         @con.exec("UPDATE publisher_bank "\
           "SET account_value = account_value + #{price.to_f*royalty.to_f} "\
-          "WHERE bank_account = #{publisher_bank_account}")
+          "WHERE bank_account = #{publisher_bank_account.to_i}")
         #check if we have gone under threshold. If so, send an email
         threshold = @con.exec("SELECT threshold_num "\
           "FROM book "\
-          "WHERE book.isbn = #{isbn["isbn"]}").values[0][0]
+          "WHERE book.isbn = #{isbn["isbn"]}").values[0][0].to_f
         num_in_stock = @con.exec("SELECT num_in_stock "\
           "FROM book "\
-          "WHERE book.isbn = #{isbn["isbn"]}").values[0][0]
+          "WHERE book.isbn = #{isbn["isbn"]}").values[0][0].to_f
         if num_in_stock < threshold
           email = @con.exec("SELECT email_address "\
             "FROM book "\
             "JOIN publisher "\
             "ON book.p_id = publisher.p_id "\
             "WHERE book.isbn = #{isbn["isbn"]}").values[0][0]
+
           puts "Here we would send an email to #{email} requesting for more copies of #{isbn["isbn"]}. "\
           "We don't currently have any way of keeping track of what month it is, but if we did, we would run "\
-          "a query like this..."\
-          "\n " #example query
-          "SELECT sum(cart_books.isbn) "\
-          "FROM checkout "\
-          "JOIN cart "\
-          "ON checkout.cart_id = cart.cart_id "\
-          "JOIN cart_books "\
-          "ON cart.cart_id = cart_books.cart_id "\
-          "WHERE month = current_month - 1 "\
-          "AND isbn = isbn_to_order"
+          "a query like this..."
+          puts "SELECT sum(cart_books.isbn) "
+          puts "FROM checkout "
+          puts "JOIN cart "
+          puts "ON checkout.cart_id = cart.cart_id "
+          puts "JOIN cart_books "
+          puts "ON cart.cart_id = cart_books.cart_id "
+          puts "WHERE month = current_month - 1 "
+          puts "AND isbn = isbn_to_order"
+          puts "\n instead, I'll just add 10 books to the instock amount"
           Helper.wait
+
+          # add 10 books
+          @con.exec("UPDATE book "\
+            "SET num_in_stock = num_in_stock + 10 "\
+            "WHERE isbn = #{isbn["isbn"]}")
         else
           puts "Plenty more copies of isbn = #{isbn["isbn"]} in stock!"
         end
