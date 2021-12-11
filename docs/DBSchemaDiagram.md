@@ -1,3 +1,3 @@
 # DBSchemaDiagram
 
-![our ERD](./DBSchemaDiagram.png)
+![our ERD](./photos/DBSchemaDiagram.png)

@@ -1,4 +1,4 @@
-# RELATION SCHEMAS BEFORE 3NF
+# Reduction to Relational Schema (No Normalization)
 
 '*' = FK
 

@@ -1,6 +1,6 @@
 # ERD
 
-![our ERD](./ERD.png)
+![our ERD](./photos/ERD.png)
 ## Assumptions
 - Carts are only every generated after user adds a book
 - Therefore, Carts must have atleast one book
