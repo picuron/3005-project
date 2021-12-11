@@ -8,6 +8,21 @@ module Client
       @con = con
     end
 
+    #upticks num_sold and downticks num_in_stock
+    def uptick_num_solds(cart)
+      statement = "SELECT isbn FROM cart "\
+      "JOIN cart_books ON cart.cart_id = cart_books.cart_id "\
+      "WHERE cart.cart_id = $1"
+      isbns = @con.exec_params(statement, [cart])
+      isbns.each do |isbn|
+        statement2 = "UPDATE book "\
+        "SET num_in_stock = num_in_stock - 1, "\
+        "num_sold = num_sold + 1 "\
+        "WHERE isbn = $1"
+        @con.exec_params(statement2, [isbn["isbn"]])
+      end
+    end
+
     def create_address_region_pair_and_return_aid(hash, type)
       @con.exec_params(GenStatements.gen_region_statement, [hash["#{type}_postal_code"], hash["#{type}_city"], hash["#{type}_country"]])
       puts "Region Added"
