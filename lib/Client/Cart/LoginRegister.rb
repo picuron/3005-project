@@ -105,7 +105,7 @@ module Client
       new_user['billing_city'] = gets.chomp
       puts "Billing country: "
       new_user['billing_country'] = gets.chomp
-      puts "Is your Shiping addres the same as your billing address ?"
+      puts "Is your shipping address the same as your billing address ?"
       puts "[1] - Yes\n[2] - No"
       while true
         input = gets.chomp

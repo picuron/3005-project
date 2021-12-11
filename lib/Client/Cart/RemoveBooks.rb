@@ -72,9 +72,7 @@ module Client
 
     #Main Method
     def execute
-      puts "In Orders Execute"
       books_remove
-      #updates the state as we exit file
       @state = {"session" => @session, "cart" => @cart, "user" => @user}
     end
   end

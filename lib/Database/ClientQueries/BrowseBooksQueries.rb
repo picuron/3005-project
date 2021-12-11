@@ -15,13 +15,22 @@ module Client
 
     def add_to_cart(isbn, cart)
       if cart != nil
-        @con.exec_params(GenStatements.gen_cart_books_statement, [cart, isbn])
+        begin
+          @con.exec_params(GenStatements.gen_cart_books_statement, [cart, isbn])
+        rescue PG::UniqueViolation
+          puts "So this is another design flaw. We modelled isbn as the PK, meaning the "\
+          "join table between books and cart required the PK from books and the PK from cart "\
+          ". Therefore, adding in the same book twice causes a violation. If we had more time to "\
+          " perfect this, each instance of a book to should a unique id, and the isbn should not be used as PK. "\
+          "That, or something like we increment a x2 x3 type thing, but again, we do not have time to implement this."
+          Helper.wait
+        end
         return cart
       else
         new_cart_id = instantiate_new_cart
-        @con.exec_params(GenStatements.gen_cart_books_statement, [new_cart_id, isbn]) 
-        return new_cart_id   
-      end 
+        @con.exec_params(GenStatements.gen_cart_books_statement, [new_cart_id, isbn])
+        return new_cart_id
+      end
    end
 
    def instantiate_new_cart

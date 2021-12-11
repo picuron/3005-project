@@ -43,25 +43,21 @@ module Client
         when '3'
           # i dont like this patter, but im not sure how to maintain cart state
           state = BrowseBooks.new(@session, @cart, @user).state
-          puts "state = #{state.values}"
           @session = state["session"]
           @cart = state["cart"]
           @user = state["user"]
         when '4'
           state = SearchForBooks.new(@session, @cart, @user).state
-          puts "state = #{state.values}"
           @session = state["session"]
           @cart = state["cart"]
           @user = state["user"]
         when '5'
           state = CartController.new(@session, @cart, @user).state
-          puts "state = #{state.values}"
           @session = state["session"]
           @cart = state["cart"]
           @user = state["user"]
         when '6'
           state = Orders.new(@session, @cart, @user).state
-          puts "state = #{state.values}"
           @session = state["session"]
           @cart = state["cart"]
           @user = state["user"]

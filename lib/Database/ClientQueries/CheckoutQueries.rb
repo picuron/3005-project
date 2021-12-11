@@ -36,7 +36,6 @@ module Client
         #use the provided parameters
         shipping_address = create_address_region_pair_and_return_aid(shipping_hash, 'shipping')
         puts "Shipping info Added"
-        billing_address = nil
         if (shipping_hash["shipping_postal_code"] == billing_hash["billing_postal_code"])
           billing_address = shipping_address
         else
