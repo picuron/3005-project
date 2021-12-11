@@ -1,6 +1,5 @@
 require_relative '../HelperLib/Helper.rb'
 require_relative '../Database/OwnerQueries/AddBookQueries.rb'
-require 'pry'
 
 module Owner
   class AddBook
