@@ -17,20 +17,91 @@ module Owner
     end
 
     def generate_sales_vs_cost
-      #query for what we need, generate the numbers, save as a report
-      puts "Generated sales vs cost"
+      puts "What is the day today?"
+      day = gets.chomp
+      puts "What is the month today (number)"
+      month = gets.chomp
+      puts "What is the year today?"
+      year = gets.chomp
+      con = @session_object_in.db_connection_open
+      sales = con.exec("SELECT SUM(price*num_sold) FROM book").values[0][0].to_i
+      cost = con.exec("SELECT SUM(cost*num_sold) FROM book").values[0][0].to_i
+
+      result = "You generated $" + sales.to_s + " which cost you $" + cost.to_s + " representing a profit of $" + (sales-cost ).to_s
+
+      get_owner_statement = "SELECT o_id FROM owner WHERE username=$1 AND password=$2"
+      response = con.exec_params(get_owner_statement, [@login_session[:username], @login_session[:password]])
+      owner_id = response.values[0][0]
+
+      report_satement = "INSERT INTO reports (o_id, day, month, year, report_type, result) VALUES ($1, $2, $3, $4, $5, $6)"
+      con.exec_params(report_satement, [owner_id, day, month, year, "SALES_VS_COST", result])
+
+      @session_object_in.db_connection_close(con)
+      
+      puts result
       Helper.wait
     end
     
     def generate_sales_by_author
-      #query for what we need, generate the numbers, save as a report
-      puts "Generated sales by author"
+      puts "What is the day today?"
+      day = gets.chomp
+      puts "What is the month today (number)"
+      month = gets.chomp
+      puts "What is the year today?"
+      year = gets.chomp
+      con = @session_object_in.db_connection_open
+      sales = con.exec("SELECT author_email.first_name, author_email.last_name, 
+        SUM(price*num_sold) 
+        FROM book
+        JOIN author_books 
+        ON book.isbn = author_books.isbn
+        JOIN author 
+        ON author_books.a_id = author.a_id
+        JOIN author_email
+        ON author.email_address = author_email.email_address
+        GROUP BY author_email.first_name, author_email.last_name")
+      
+      result = ""
+      sales.each do |sale|
+        result = result + sale["first_name"] + " " + sale["last_name"] + " | $"+ sale["sum"] + "\n"
+      end
+      get_owner_statement = "SELECT o_id FROM owner WHERE username=$1 AND password=$2"
+      response = con.exec_params(get_owner_statement, [@login_session[:username], @login_session[:password]])
+      owner_id = response.values[0][0]
+
+      report_satement = "INSERT INTO reports (o_id, day, month, year, report_type, result) VALUES ($1, $2, $3, $4, $5, $6)"
+      con.exec_params(report_satement, [owner_id, day, month, year, "SALES_VS_AUTHOR", result])
+
+      @session_object_in.db_connection_close(con)
+      
+      puts result
       Helper.wait
     end
 
     def generate_sales_by_genre
-      #query for what we need, generate the numbers, save as a report
-      puts "Generated sales by genre"
+      puts "What is the day today?"
+      day = gets.chomp
+      puts "What is the month today (number)"
+      month = gets.chomp
+      puts "What is the year today?"
+      year = gets.chomp
+      con = @session_object_in.db_connection_open
+      sales = con.exec("SELECT genre,SUM(price*num_sold) FROM book GROUP BY genre")
+      
+      result = ""
+      sales.each do |sale|
+        result = result + sale["genre"] + " | $"+ sale["sum"] + "\n"
+      end
+      get_owner_statement = "SELECT o_id FROM owner WHERE username=$1 AND password=$2"
+      response = con.exec_params(get_owner_statement, [@login_session[:username], @login_session[:password]])
+      owner_id = response.values[0][0]
+
+      report_satement = "INSERT INTO reports (o_id, day, month, year, report_type, result) VALUES ($1, $2, $3, $4, $5, $6)"
+      con.exec_params(report_satement, [owner_id, day, month, year, "SALES_VS_GENRE", result])
+
+      @session_object_in.db_connection_close(con)
+      
+      puts result
       Helper.wait
     end
 
@@ -46,6 +117,7 @@ module Owner
     #Main Method
     def execute
       while true
+        Helper.clear
         get_report_menu
         input = gets.chomp
         
