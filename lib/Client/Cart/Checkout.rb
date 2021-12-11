@@ -73,7 +73,6 @@ module Client
       @session.db_connection_close(con)
       if success
         uptick_num_solds
-        puts "Return to Menu to View your Orders"
         @cart = nil
       end
     end
