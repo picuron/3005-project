@@ -171,8 +171,7 @@ module Database
       publisher_id = get_random_publisher
 
       if is_valid_insert("book", "isbn", isbn) && is_valid_insert("book", "title", title)
-        # THRESHOLD NUMBER IS BEING SET TO 0. Not sure whats the right behvaiour..
-        @con.exec_params(GenStatements.gen_book_statement, [isbn, publisher_id, title, genre, royalty, num_pages, price, cost, num_in_stock, 0, num_sold])
+        @con.exec_params(GenStatements.gen_book_statement, [isbn, publisher_id, title, genre, royalty, num_pages, price, cost, num_in_stock, 5, num_sold])
       else
         puts "Edge case resolved: Duplicate randomly generated book value detected."
       end

@@ -38,7 +38,7 @@ CREATE TABLE customer_email
 
 CREATE TABLE publisher_bank
   (
-    bank_account   INT,
+    bank_account   BIGINT,
     account_value  INT NOT NULL,
     PRIMARY KEY (bank_account)
   );
@@ -78,7 +78,7 @@ CREATE TABLE publisher
     p_id           SERIAL,
     address_id     INT,
     email_address  VARCHAR(50),
-    bank_account   INT,
+    bank_account   BIGINT,
     PRIMARY KEY (p_id),
     FOREIGN KEY (address_id) REFERENCES address
     ON DELETE SET NULL,
