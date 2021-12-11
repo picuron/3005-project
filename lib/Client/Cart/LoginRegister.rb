@@ -118,9 +118,9 @@ module Client
             new_user['shipping_country'] = new_user['billing_country']
             break
           when '2'
-            puts "Silling street number: "
+            puts "Shipping street number: "
             new_user['shipping_street_number'] = gets.chomp
-            puts "Silling street name: "
+            puts "Shipping street name: "
             new_user['shipping_street_name'] = gets.chomp
             puts "Shipping postal code: "
             new_user['shipping_postal_code'] = gets.chomp
