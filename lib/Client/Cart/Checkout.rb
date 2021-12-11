@@ -54,11 +54,11 @@ module Client
     end
 
     def get_billing_info
-      get_addr_hash("Billing")
+      get_addr_hash("billing")
     end
 
     def get_shipping_info
-      get_addr_hash("Shipping")
+      get_addr_hash("shipping")
     end
 
     def checkout_user_and_cart(date_hash, shipping_hash = nil, billing_hash = nil)
@@ -134,7 +134,7 @@ module Client
                   }
                   break
                 when '2'
-                  shipping_hash = get_shipping_hash
+                  shipping_hash = get_shipping_info
                   break
                 else
                   Helper.invalid_entry_display
@@ -186,7 +186,6 @@ module Client
     #Main Method
     def execute
       checkout_controller
-      #updates the state as we exit file
       @state = {"session" => @session, "cart" => @cart, "user" => @user}
     end
   end

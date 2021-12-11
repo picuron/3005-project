@@ -26,11 +26,14 @@ module Client
     end
 
     def print_cart(cart_records)
+      total_price = 0
       cart_items = []
       cart_records.each do |book|
         cart_items << book
+        total_price += book["price"].to_f
       end
       puts cart_items
+      puts "\n Total Price: $#{total_price.round(2)}"
     end
 
     private
@@ -57,13 +60,11 @@ module Client
           case input
           when '1'
             state = Checkout.new(@session, @cart, @user).state
-            puts "state = #{state.values}"
             @session = state["session"]
             @cart = state["cart"]
             @user = state["user"]
           when '2'
             state = RemoveBooks.new(@session, @cart, @user).state
-            puts "state = #{state.values}"
             @session = state["session"]
             @cart = state["cart"]
             @user = state["user"]
@@ -79,7 +80,6 @@ module Client
     #Main Method
     def execute
       cart_controller
-      #updates the state as we exit file
       @state = {"session" => @session, "cart" => @cart, "user" => @user}
     end
   end
