@@ -1,3 +1,5 @@
+-- Relations Clear
+
 delete from cart;
 delete from author_email;
 delete from owner_email;
