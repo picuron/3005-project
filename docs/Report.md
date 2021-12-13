@@ -1,3 +1,8 @@
+# Book Store Project COMP3005 FALL 2021
+Joshua Kline - 101125043
+
+Eric Herscovich - 
+
 # Conceptual Design
 
 ## ERD
@@ -67,7 +72,7 @@
 
 **address**(<ins>address_id</ins>, street_number, street_name, city, country, postal_code)
 
-
+---
 
 
 
@@ -167,6 +172,7 @@
 
 }
 
+---
 
 
 ## Normalization into 3NF
@@ -1249,53 +1255,105 @@ F<sub>c</sub> = {
 * This appication was written in ruby
 * Though I will not show it in this report, 99.9% of the time, if you provide invalid input, the program has been designed to catch it, and re prompt the user to provide valid data. input cleansing is an exhaustive task, and we did as much as we could. If you try to break the program you may find spots where our input validity detection is weaker. We will not bother displaying this error detection in the below sequence.
 
-# Application Design
+---
 
-# Opening 
+## Application Design
+
+![total](./photos/photos_implementation/total.png)
+At a first glance our project looks like this. The actual program is in the /lib directory, but we also have a /docs where we wrote all of the markdown files which were later compiled into a single markdown file, converted to a pdf, which you are reading right now. This also contained all of the photos used throughout the report. There is a /bin directory, gemfile, rakefile, gitignore, and a README file. The latter includes instructions on how to run the application, the others are needed to establish the project, but are not relevant to our discussion.
+
+![lib](./photos/photos_implementation/lib.png)
+This application was designed in a sudo MVC format. Upon opening the /lib directory, you will find 4 more directories, /Client, /Owner, /Database, and /HelperLib as well as two ruby files BookStore.rb and BookStoreController.rb. 
+
+The application starts in Bookstore.rb, which simply instantiates a BookStoreController. Inside this controller, we do 4 thrings. 
+1) Prompt the user to connect to the db
+2) Prompt the user to either restart the db or maintain the current version
+3) Wipe and auto populate the DB if required
+4) Prompt the user to sign in as user or owner. 
+
+![db](./photos/photos_implementation/database.png)
+The initDB.rb file described above is found in the /Database folder, which will contain all the back end logic that directly interacts with the DB. This folder includes the subfolders of /ClientQueries, /OwnerQueries, /SQL, as well as a few files; GenStatments.rb, initDB.rb, and Populate.rb.
+
+Populate.rb contains all the logic for populating the database with initial data. Due to the relational database and restrictions between entities, there is some dense logic in this file to make sure every links up. Here we used the ruby Faker gem to help auto populate the fields to save us some time. We also make use of the GenStatements.rb file which holds a library of popular prepared statements used through out the application. Rather than re-writing them many times, we gathered them all in a file of their own, so as long as we include the file, we can re-use the same statements repeatedly. This was nice for things like Insertion Statements for Region entities, which occur often throughout the program. 
+
+The /SQL directory includes 2 types of files. 
+1) Files that are actually used in the application like realDDL.sql and realRelationsInsert.sql which are a part of the program for building and deleting tables. 
+2) Files like Statements.rb, Queries.rb, and Functions.rb that are only there as part of the project outline to gather SQL in one place for ease of reading for the TA. In reality, it was much more practical to have these Queries and what not written in .rb files. 
+
+In the /ClientQueries and /OwnerQueries files you will find .rb files containing all the logic needed to perform the various queries needed on the client and owner side of the applicaiton. The names of the files within correpsond to the filename in the actual /Client or /Owner directory for which they compliment. For instance, within the /ClientQueries folder, you will find a file called BrowseBooksQueries.rb. This file contains all of the functions, queries, and prepared statements used to perform the BrowseBooks section of the application as designed in the /Client/BrowseBooks.rb file. Again, in ruby, with this design, using the gems we used, it was far far more practical to organize the SQL content like this rather then in a .sql specific directory. 
+
+![helper](./photos/photos_implementation/helper.png)
+Before we look into the /Client and /Owner folders, we can look at the /HelperLib directory. This currently only contains the Helper.rb file, but if we were to continue working on this project, we would likely refactor lots of the code, pulling out common functionalities, and adding them into this folder. This file contains generic functions that are used through out the application. Things like clearing the terminal, prompting the user to pres enter to continue, or even starting up or closing a DB connection. 
+
+Recall that the BookStoreController.rb file gave you the option of entering the application as a Client or an Owner. Depending on your choice, you will be thrown into the /Client/ClientController.rb or /Owner/OwnerController.rb files. In either case, you find yourself in another controller. 
+
+![client](./photos/photos_implementation/client.png)
+Lets explore the /Client side first. The client directory contains a ClientController.rb file. This is where we are first sent after choosing Client from the BookStore Controller. This files serves three purposes;
+1) To printout the menu options to the user
+2) To redirect the user into the functinoality of the object of interest, based on their choice (BrowseBook, ViewReport, etc.)
+3) To maintain and pass state in and out of various objects as the user enters and exists the differing menues. 
+
+Depending on the users selection in the Client controller, they are either sent into the BrowseBooks object, Orders object, SearchForBooks object, or the /Cart/CarController.rb file. All the other operations were simple enough to be done in a single file, but since the user is given many options of directions when they ask to see their cart, this became its own subdirectory, with its own controller. Recall, during checkout, the user is asked to either login, or register a new account, if they are not currently logged in. Due to all this extra logic, it was easier to break this process into subprocesses, and subfiles. The CartController will direct the user to either the Checkout object, LoginRegister object, or the RemoveBooks object. Each of these menues also allows the user to back up to a previous screen, and all the meanwhile state is maintained. That means, your cart, db connection data, and user info is all maintained, and persists through the program. This way, you only need to login once, only need to provide a db connection once, and do not need to worry about yonur cart instance deleting as you explore the application. 
+
+In all of the files described above, as mentioned earlier, all queries needed for the Classes behaviour is stored in a sister file in the /Database directory. These sister Files are included in the appropriate Client side files and allows for separation of logic from query. 
+
+![owner](./photos/photos_implementation/owner.png)
+Now let's explore the /Owner Directory. 
+
+
+
+---
+
+### Opening 
+
+---
 
 ![enter](./photos/enter.png)
-Once you launch the program, you are prompted to provide the DB name which you have generated on your local version of pgAdmin / postgres. You must then provide your postgres username, and your postgres password. This is to setup a connection to the DB, this has nothing to do with being an owner or a client. Note: the password is hidden as you type it in, in the event you are simple like me and used the same passwrd for everything but didn't want your partner to access your banking info when paired programming on the project.
+Once you launch the program, you are prompted to provide the DB name which you have generated on your local version of pgAdmin / postgres. You must then provide your postgres username, and your postgres password. This is to setup a connection to the DB, this has nothing to do with being an owner or a client. Note: the password is hidden as you type it in for improved security.
 
 ![initialize](./photos/initialize.png)
-You will then be asked wether or not you want to initialize the DB. If you say no, you will go forward with w.e version of the database is currently connected to the DB connection you made in the previous screen. This allows for you to close the program, return, and still have all of your data stored. This option is assuming you have initialized the DB atleast once before. If you ask to initialize, a program will run which deletes all the old data, drops all the old tables, reconstructs all the tables, and populated all the tables with randomly generated data.
+You will then be asked wether or not you want to initialize the DB. If you say no, you will go forward with whatever version of the database is currently connected to the DB connection you made in the previous screen. This allows for you to close the program, return, and still have all of your data stored. This option is assuming you have initialized the DB atleast once before. If you ask to initialize, a program will run which deletes all the old data, drops all the old tables, reconstructs all the tables, and populated all the tables with randomly generated data.
 
 
 ![initialize](./photos/populate.png)
-This is a small sample section of the feedback that is priinted to console when the DB initializes. All these records are connected to one another, and follow all the needed restriction of the DB. The ruby Faker Gem was used to help populate fields when possible. You will notice that anytime the Faker gem were to cause an error, say maybe adding in a non unqiue value when it needed to have been, we capture these cases, resolve them, and print "edge case resolved" to the console on occurance. This is useful for debugging and letting the user know that everything started up as expected. 
+This is a small sample section of the feedback that is printed to console when the DB initializes. All these records are connected to one another, and follow all the needed restrictions of the DB. The ruby Faker Gem was used to help populate fields when possible. You will notice that anytime the Faker gem was to cause an error, say maybe adding in a non unqiue value when it needed to have been, we capture these cases, resolve them, and print "edge case resolved" to the console on occurance. This is useful for debugging and letting the user know that everything started up as expected. 
 
 ![initialize](./photos/client_or_owner.png)
 Next you are prompted to enter as either a client or an owner. We will first see the Client side of things, and later the owner side. 
 
-# The Client Side
+### The Client Side
 
 ![initialize](./photos/client_welcome.png)
-Upon pressing 'C', you will be brought to the stores main page. Here you have a nmber of options of things to do. 1 will quit the program all together. 2 will bring you back to the client / owner menu you saw in the previous section, and the other 4 options we will explore in more detail. Currently, since we only just entered the applicaiton, we do not have a cart, and we do not have any checkouts (because we have not yet signed in) 
+Upon pressing 'C', you will be brought to the stores main page. Here you have a number of options of things to do. 1 will quit the program all together. 2 will bring you back to the client / owner menu you saw in the previous section, and the other 4 options we will explore in more detail. Currently, since we only just entered the applicaiton, we do not have a cart, and we do not have any checkouts (because we have not yet signed in) 
 
 If we click on 5 or 6 at this time, you will see the following messages;
+
+
 ![initialize](./photos/cart_reject.png)
 ![initialize](./photos/orders_reject.png)
+
 In either case we will be brought back to the main client side menu from earlier. 
 
 ![initialize](./photos/browse_books.png)
-If we select 3, we will enter the browse books screen. This queries the DB for all book on record, and shows their isbn and title. You will then be prompted to either copy paste an isbn below and click enter to view more details about the book, or just click enter to go back to the main menu. 
+If we select 3, we will enter the browse books screen. This queries the DB for all books on record, and shows their isbn and title. You will then be prompted to either copy paste an isbn below and click enter to view more details about the book, or just click enter to go back to the main menu. 
 
 ![initialize](./photos/view_book.png)
-If we pasted in the isbn for *Tender Is The Night*, you will see more infor about that title. We can enter 0 to back to viewing the books if we are not intereste,d or 1 to add it to the cart.
+If we pasted in the isbn for *Tender Is The Night*, you will see more info about that title. We can enter 0 to back to viewing the books if we are not interested, or 1 to add it to the cart.
 
 ![initialize](./photos/added_to_cart.png)
 After pressing one, we are brought to a screen that confirms the item was added to the cart. Behind the scenes, this also instantiated a new cart entity, and stored its cart_id as state in the applicaiton, so any other books we add or remove going forward get added to the same cart. Pressing enter will bring you back to the book browse. I'll go ahead and add in two more books and return to the main menue.
 
 ![initialize](./photos/search_books.png)
-If we click on 4 from the main menue, we get brought into the main menu screen. Here we can choose what to search by and we also hve the option to leave this menu. Most of the logic behind thse options are similar, so lets take a peak at what happens when we search by author...
+If we click on 4 from the main menue, we get brought into the search book screen. Here we can choose what to search by and we also have the option to leave this menu. Most of the logic behind these options are similar, so lets take a peak at what happens when we search by author...
 
 ![initialize](./photos/author_search.png)
-Here we ssearched upp the author name *Shane* and weere returns the top 5 similar options. These similarity searches are done by Levenshtein value. This means, the fewer character insertions, deletions, and replacements needed, the more similar the strings are considered to be. For instance, it only took 6 inssertions to go from *Shane* -> *Shane Koepp*, so we subtracted 6 from 100 to get a similarity score of 94. In the same vein, it would take 9 modificaitons to *Dion Ledner* -> *Shane Koepp*, which is fewer then other authors in the DB, so her books are shown next. Just like on the books browse menu earlier, we can either add these to the cart just like before, or go back to the menu. Let's go back. 
+Here we searched up the author name *Shane* and were returned the top 5 similar options. These similarity searches are done by Levenshtein value. This means, the fewer character insertions, deletions, and replacements needed, the more similar the strings are considered to be. For instance, it only took 6 inssertions to go from *Shane* -> *Shane Koepp*, so we subtracted 6 from 100 to get a similarity score of 94. In the same vein, it would take 9 modificaitons to *Dion Ledner* -> *Shane Koepp*, which is fewer then other authors in the DB, so her books are shown next. Just like on the books browse menu earlier, we can either add these to the cart just like before, or go back to the menu. Let's go back. 
 
 ![initialize](./photos/view_cart.png)
-At this point, if we tried to view orders, it would still boot us out, as we have not made any, but we know do have a valid cart that is populated with isbn's. Here we can see everythign in the cart, their isbns, titles, and prices. We can remove books by pressing 2
+At this point, if we tried to view orders, it would still boot us out, as we have not made any, but we now do have a valid cart that is populated with isbn's. Here we can see everythign in the cart, their isbns, titles, and prices. We can remove books by pressing 2
 
 ![initialize](./photos/remove_books.png)
-Here, we aree prompted to put in the isbns we wish to remove. At this point I implemented the ability to provide many isbns at once rather then needed to do it in many motions. So long as they are new line separated, they will all be removed from your cart. 
+Here, we are prompted to put in the isbns we wish to remove. At this point I implemented the ability to provide many isbns at once rather then needing to do it in many motions. So long as they are new line separated, they will all be removed from your cart. 
 
 ![initialize](./photos/remove_books_after.png)
 As you can see, both of the titles were removed from the cart, and the total price has adjusted accordingly. I will go add in another book so that the final screens are more interesting, then we will progress into *Proceed to Checkout*.
@@ -1307,33 +1365,33 @@ This option will check and make sure we didnt just delete everything from our ca
 We can go into pgAdmin, fetch the customers that were auto populated when we initialized the DB, and grab the username and password from one of the records. We will just use the firsst one. 
 
 ![initialize](./photos/username_password.png)
-provide these details after being prompted from the loging page
+Provide these details after being prompted from the login page
 
 ![initialize](./photos/welcome_user.png)
-You will then be welcomed, and a user state, containing your id, will be stored in the application, going forward, you will not need to provide as much information about yourself for subsequent checkouts. This time around, you will be asked if your billing / shipping for this particular checkout are the same or different from those you have on record. Letss pretend they are not. 
+You will then be welcomed, and a user state, containing your id, will be stored in the application, going forward, you will not need to provide as much information about yourself for subsequent checkouts. This time around, you will be asked if your billing / shipping for this particular checkout are the same or different from those you have on record. Lets pretend they are not. 
 
 ![initialize](./photos/billing_info.png)
-After providing all of your billing information, you will be asked if your shipping and billing are the ssame for this order. If you say no, you will be prompted all of the above information again. Both of these addresses you provide will generate unique insances in the DB, and your billing_id and shipping_id will be different. In the event that you say yes, they are the same, we just have both you billing_id and shipping_id point to the same address_id, the one you just created for billing info. 
+After providing all of your billing information, you will be asked if your shipping and billing are the same for this order. If you say no, you will be prompted all of the above information again. Both of these addresses you provide will generate unique instances in the DB, and your billing_id and shipping_id will be different. In the event that you say yes, they are the same, we just have both your billing_id and shipping_id point to the same address_id, the one you just created for billing info. 
 
 ![initialize](./photos/date.png)
-This part I regret designing this way, but alas. You will be prompted to put in the day / month / year. We should have used a Date or DateTime object and had this auto populate, this would have saved a lot of headache down the road. But we do not have enough time to redo all of this, so we will embrace this jank, and chalf it up to a learning opportunity. 
+This part I regret designing this way, but alas. You will be prompted to put in the day / month / year. We should have used a Date or DateTime object and had this auto populate, this would have saved a lot of headache down the road. But we do not have enough time to redo all of this, so we will embrace this jank, and chalk it up to a learning opportunity. 
 
-![initialize](./photos/date.png)
-If the order goes through succesfuly you will be notified, and we provide a little bit of feedback that there are more copies of those books in stock. If the stock number dips before the threshold number, this is the screen where you will see an *email* get sent to the appropriate publisher. If this were a real application, we obviously would not show that here, but this seemed like the most appropriate space to give this feedback all thigns considered. This is also the spot where the following actions take place behind the scenes. 
+![initialize](./photos/order_generated.png)
+If the order goes through succesfuly you will be notified, and we provide a little bit of feedback that there are more copies of those books in stock. If the stock number dips below the threshold number, this is the screen where you will see an *email* get sent to the appropriate publisher. If this were a real application, we obviously would not show that here, but this seemed like the most appropriate space to give this feedback. This is also the spot where the following actions take place behind the scenes. 
 
 ![initialize](./photos/update.png)
-This function fires in the backgorund, update the num_in_stock, num_sold, threshold email trigger, and publisher pay out triggers all at once. It is dense, but it works. this is also called iteratively on every isbn in the cart, so every book has its values adjusted accordingly. 
+This function fires in the backgorund, updates the num_in_stock, num_sold, threshold email trigger, and publisher pay out triggers all at once. It is dense, but it works. This is also called iteratively on every isbn in the cart, so every book has its values adjusted accordingly. 
 
 ![initialize](./photos/orders.png)
-Now if we go back to the main menu, and click on orders, we will be shown all of our orders, their dates, their contents, the total price, the status and the current location. On the owner side of the application,, they can switch the oorder from unfulfilled to fulfilled, and provide geographic locations while it is in transit. Project description suggested viewing orders 1 at a time by order number, but this seemed very odd and unrealistic. When you buy things on amazon, and you view your past orders, they are there, easily accessible, and you can see all the relevant infomation. Having to go find an order numberr and look it up manually is tedious and does not make sense. As such I implemented it this way instead. This still requires performing the same type of query on an order number, but rather then having the user pass in a specific number, I am iterating through all of the order_numbers associated with the given user_id who is currently stored in state, and generating a order report for every one on record. I would argue this is a bonus feature. 
+Now if we go back to the main menu, and click on orders, we will be shown all of our orders, their dates, their contents, the total price, the status and the current location. On the owner side of the application, they can switch the order from unfulfilled to fulfilled, and provide geographic locations while it is in transit. Project description suggested viewing orders 1 at a time by order number, but this seemed very odd and unrealistic. When you buy things on amazon, and you view your past orders, they are there, easily accessible, and you can see all the relevant infomation. Having to go find an order number and look it up manually is tedious and does not make sense. As such I implemented it this way instead. This still requires performing the same type of query on an order number, but rather then having the user pass in a specific number, I am iterating through all of the order_numbers associated with the given user_id who is currently stored in state, and generating a order report for every one on record. I would argue this is a bonus feature. 
 
-The last thing to show on the client side is the proocess of registring a new user. Currently, we are signed in, but no longer have a valid cart. If we try to view cart at this point, it would boot us out, but if we try to view orders, like we just did, it will let us through because we have a user_id in state. In order to remove the user_id from state we need to return to the client/owner option mmenu, and re-enter as a client. We then need to add something to the cart, and go to checkout, and select register new user. To save time, I will do that without photos, and we will continue from there. 
+The last thing to show on the client side is the process of registring a new user. Currently, we are signed in, but no longer have a valid cart. If we try to view cart at this point, it would boot us out, but if we try to view orders, like we just did, it will let us through because we have a user_id in state. In order to remove the user_id from state we need to return to the client/owner option mmenu, and re-enter as a client. We then need to add something to the cart, and go to checkout, and select register new user. To save time, I will do that without photos, and we will continue from there. 
 
 ![initialize](./photos/register_new.png)
-Here we provide all our info, and this time we decided the billing and shipping are different for the registered account. We also have the option of provided as many phone numbers as neede,d which will be formatted and then stored in the DB.
+Here we provide all our info, and this time we decided the billing and shipping are different for the registered account. We also have the option of providing as many phone numbers as needed which will be formatted and then stored in the DB.
 
 ![initialize](./photos/register_complete.png)
-Upon submitting we see that all the entities populated succesfully, and are again prompted if the checkout specific billing and shipping match the registered billing and shipping we just provided. Lets say no this time. We will also assum the checkout shpping and billing are not equal. this one is a real doozy!
+Upon submitting we see that all the entities populated succesfully, and are again prompted if the checkout specific billing and shipping match the registered billing and shipping we just provided. Lets say no this time. We will also assume the checkout shpping and billing are not equal.
 
 ![initialize](./photos/registered_checkout.png)
 Provide all the info and we are good to go. We will then be asked to provide the date again, and the rest of the sequence is exactly like it was for the login sequence. 
@@ -1341,7 +1399,7 @@ Provide all the info and we are good to go. We will then be asked to provide the
 ![initialize](./photos/reg_post.png)
 We can also see if we query in pgAdmin that ouur new user has been generated, and all 3 phone numbers have been stored. 
 
-# The Owner Side
+### The Owner Side
 
 
 
@@ -1355,6 +1413,8 @@ We can also see if we query in pgAdmin that ouur new user has been generated, an
 * We show similar books when searching by any given parameter. You will always return the top 5 matches, assuming there are 5, for any given search.
 
 * We implemented a sense of "state" throughout the client side of the aplication. Once you go to checkout ffor the first time, you will be promted to either sign in or create a new account. After doing so, your credentials will be stored such that you can navigate around the store in any direction you want, and when it comes time to checkout again, you will not need to provide your information for  a second time. We keep track of the logged in users credentials, the connection point to the database stored on the hostss computer, and the cart currently in action through out the alication. 
+
+* Rather then displaying a single Order at a time given an input order number, we designed the application to all of the previous reports, including their dates, total prices, current location, and fulfilment status. This is more akin to a real e-commerce store where you can view and scroll through all of your past purchasses. 
 
 
 
