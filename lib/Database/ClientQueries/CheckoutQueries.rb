@@ -54,6 +54,7 @@ module Client
           puts "Here we would send an email to #{email} requesting for more copies of #{isbn["isbn"]}. "\
           "We don't currently have any way of keeping track of what month it is, but if we did, we would run "\
           "a query like this..."
+
           puts "SELECT sum(cart_books.isbn) "
           puts "FROM checkout "
           puts "JOIN cart "

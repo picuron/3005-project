@@ -8,6 +8,7 @@ module Database
       attr_accessor :db_name
       attr_accessor :username
       attr_accessor :password
+      #state elements to be maintained
       def initialize(db_name_in, username_in, password_in)
         @db_name = db_name_in
         @username = username_in
@@ -73,6 +74,7 @@ module Database
       puts "--- All Tables Generated ---"
     end
 
+    #fuzzy string is needed for LevenShtein function, to compare strings
     def create_fuzzy_string_extension(connection)
       puts "installing fuzzy string"
       begin
@@ -116,6 +118,7 @@ module Database
       end
     end
 
+    # fetch user postgres info and connect to db, store the connection info in state
     def connect_to_db
       emptySession = true
       while emptySession
@@ -127,9 +130,7 @@ module Database
           puts "Password: "
 
           password = STDIN.noecho(&:gets).chomp
-
           db_session = DBSession.new(db_name, username, password)
-
           con = db_connection_open(db_session)
 
           if db_session

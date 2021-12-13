@@ -73,6 +73,7 @@ module Client
     #Main Method
     def execute
       books_remove
+      #update state before exiting
       @state = {"session" => @session, "cart" => @cart, "user" => @user}
     end
   end

@@ -8,6 +8,7 @@ module Client
     attr_accessor :session
     attr_accessor :user
     attr_accessor :state
+    #state elements
     def initialize(session, cart, user)
       @session = session
       @cart = cart
@@ -48,6 +49,9 @@ module Client
 
     #FROM HERE DOWN TO MARKER IS DUPLICATED IN BROWSE BOOKS
     #PUT THESE FUNCTIONS In ANOTHER FILE
+
+    # Never got around to moving to a different file, would do so in future if had more time.
+
     def show_book_and_authors(book, authors)
       puts "Title: ".ljust(30) + "#{book.values[0][0]}"
       puts "ISBN: ".ljust(30) + "#{book.values[0][1]}"

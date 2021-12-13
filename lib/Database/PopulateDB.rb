@@ -17,22 +17,26 @@ module Database
       }.join
     end
 
+    #generic formula to query on given key value and table, given given selection clause
     def prep_result(select_, from, where, equals)
       query = "SELECT #{select_} FROM #{from} WHERE #{where}=$1"
       query_result = @con.exec_params(query, [equals])
     end
 
+
+    #returns true if there is currently no element that meets criteria
     def is_valid_insert(table_name, attribute_name, value_name)
 
       query = "SELECT COUNT(*) FROM #{table_name} WHERE #{attribute_name}=$1"
       query_result = @con.exec_params(query, [value_name])
-      
+
       if(query_result.values[0][0].to_i == 0)
         return true
       end
       false
     end
 
+    #must be done in this order since some hold FK's of others
     def create_address_region_pair_and_return_aid
       postal_code = generate_random_postal_code
       @con.exec_params(GenStatements.gen_region_statement, [postal_code, Faker::Address.city, Faker::Address.country])
@@ -43,19 +47,18 @@ module Database
 
     def create_author_author_phone_author_email_triple_and_return_aid
       puts "New author, author_phone_number and author_email created."
-
       email = Faker::Internet.email
       phone = Faker::Base.numerify('(###) ### ####')
       if is_valid_insert("author_email", "email_address", email)
         @con.exec_params(GenStatements.gen_author_email_statement, [email, Faker::Name.first_name, Faker::Name.last_name])
-        @con.exec_params(GenStatements.gen_author_statement, [email]) 
+        @con.exec_params(GenStatements.gen_author_statement, [email])
         author_id = prep_result('a_id', 'author', 'email_address', email).values[0][0].to_i
         @con.exec_params(GenStatements.gen_author_phone_number, [author_id, phone])
         return author_id
       else
         puts "Edge case resolved: Duplicate randomly generated author email detected."
       end
-      return NULL # not sure what to do in this case
+      return NULL
     end
 
     def create_publisher_tables
@@ -67,7 +70,6 @@ module Database
         @con.exec_params(GenStatements.gen_publisher_email_statement, [email, publisher_name])
         @con.exec_params(GenStatements.gen_publisher_bank_statement, [bank_number, Faker::Number.between({from: 10000, to: 1000000})])
         @con.exec_params(GenStatements.gen_publisher_statement, [create_address_region_pair_and_return_aid, email, bank_number])
-
         publisher_id = (@con.exec("SELECT p_id FROM publisher ORDER BY p_id DESC LIMIT 1")).values[0][0];
         @con.exec_params(GenStatements.gen_publisher_phone_number, [publisher_id, phone])
       else
@@ -81,10 +83,10 @@ module Database
       username = Faker::Internet.username
       if is_valid_insert("customer_email", "email_address", email) && is_valid_insert("customer", "username", username)
         @con.exec_params(GenStatements.gen_customer_email_statement, [email, Faker::Name.first_name, Faker::Name.last_name])
-        
+
         #Address 1
         shipping_addess = create_address_region_pair_and_return_aid
-    
+
         #Address 2 - If 1, different billing address than shipping, if 0, billing and shipping are the same.
         if rand(0..1) == 1
           billing_address = create_address_region_pair_and_return_aid
@@ -178,32 +180,26 @@ module Database
 
       num_authors = rand(1..3)
 
-      num_authors.times do 
+      num_authors.times do
         if rand(0..2) == 1 # 1/3 chance that an existing author wrote this book as well
           author_id = get_random_author
         else
           author_id = create_author_author_phone_author_email_triple_and_return_aid
         end
-
         # Theres a chance two of the same authors could be picked. This should trap this case.
         begin
           @con.exec_params(GenStatements.gen_author_books, [isbn, author_id])
         rescue => exception
         end
-        
       end
     end
 
     def create_carts
       @con.exec("INSERT INTO cart VALUES(default)")
       cart_id = (@con.exec("SELECT cart_id FROM cart ORDER BY cart_id DESC LIMIT 1")).values[0][0]
-
       all_books = get_books
-
       num_books_in_cart = rand(1..5)
-
       books_in_cart = all_books.sample(num_books_in_cart)
-
       books_in_cart.each do |book|
         @con.exec_params(GenStatements.gen_cart_books_statement, [cart_id, book])
       end
@@ -221,7 +217,7 @@ module Database
         year = 2021
         #Address 1
         shipping_addess = create_address_region_pair_and_return_aid
-    
+
         #Address 2 - If 1, different billing address than shipping, if 0, billing and shipping are the same.
         if rand(0..1) == 1
           billing_address = create_address_region_pair_and_return_aid

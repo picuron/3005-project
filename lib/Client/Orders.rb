@@ -7,6 +7,7 @@ module Client
     attr_accessor :session
     attr_accessor :user
     attr_accessor :state
+    #state elements
     def initialize(session, cart, user)
       @session = session
       @cart = cart

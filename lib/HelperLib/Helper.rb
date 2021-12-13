@@ -7,20 +7,20 @@ module Helper
     # Open takes a Session Object, returns a Conneciton Object
     # Close tkaes a Connection Object, closes the connection
     def db_connection_open
-      begin 
-        connection_object = PG.connect( 
-          :dbname => @session_object_in.db_name, 
-          :user => @session_object_in.username, 
+      begin
+        connection_object = PG.connect(
+          :dbname => @session_object_in.db_name,
+          :user => @session_object_in.username,
           :password => @session_object_in.password
         )
       return connection_object
       rescue PG::Error => e
-        puts e.message 
-      end 
+        puts e.message
+      end
     end
 
     def db_connection_close(connection_object_in)
-      if connection_object_in 
+      if connection_object_in
         connection_object_in.close
       end
     end
@@ -37,12 +37,13 @@ module Helper
 
   # Module Helper Methods
 
-  def wait 
+  def wait
     puts "\nPress enter to continue\n"
     input = gets.chomp
   end
   module_function :wait
 
+  #clears the terminal
   def clear
     puts "\e[2J\e[f"
   end
@@ -56,17 +57,17 @@ module Helper
 
   def exit_program
     Helper.clear
-    puts <<-'EOF'   
-        __              _          
+    puts <<-'EOF'
+        __              _
       |  _ \           | |
       | |_) |_   _  ___| |
       |  _ <| | | |/ _ \ |
       | |_) | |_| |  __/_|
       |____/ \__, |\___(_)
-              __/ |       
-            |___/        
+              __/ |
+            |___/
     EOF
-    
+
     exit
   end
   module_function :exit_program

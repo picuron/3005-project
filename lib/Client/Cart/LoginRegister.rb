@@ -22,6 +22,8 @@ module Client
       return user
     end
 
+    #checks provided username and password, if valid, returns the user id to be stored in state
+    #this allows the user to be "logged in" throughout applicaiton, even as they leave this page
     def login
       while true
         Helper.clear
@@ -63,6 +65,7 @@ module Client
     end
 
     def register
+      #we will build up a has of the new users info, and pass the hash into the query file to insert the entity
       new_user = {}
       Helper.clear
       puts "Welcome new-comer, provide the following information and we will build you an account"
@@ -76,6 +79,8 @@ module Client
       new_user["first_name"] = gets.chomp
       puts "Last Name: "
       new_user["last_name"] = gets.chomp
+      #accept as mnay phone numbers as the user gives
+      #format them all before adding to the db
       puts "Phone number in the format XXXXXXXXXX."
       puts "If you have more then one, press \'enter\' and put additional numbers on a new line."
       puts "Press \'enter\' again when done. "

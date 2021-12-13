@@ -9,6 +9,7 @@ module Client
     attr_accessor :cart
     attr_accessor :session
     attr_accessor :user
+    #state elements
     def initialize(session)
       @session = session
       @cart = nil
@@ -41,7 +42,8 @@ module Client
         when '2'
           BookStoreController.new(@session)
         when '3'
-          # i dont like this patter, but im not sure how to maintain cart state
+          # Everytime we exit a deeper object, we fetch the state at that point, and update the state at this outer level
+          # this way, next time we go an object deeper, we can pass it in the updated state.
           state = BrowseBooks.new(@session, @cart, @user).state
           @session = state["session"]
           @cart = state["cart"]
