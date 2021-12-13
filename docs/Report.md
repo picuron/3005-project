@@ -1422,7 +1422,7 @@ We can also see if we query in pgAdmin that ouur new user has been generated, an
 
 # Github Repository
 
-link
+https://github.com/picuron/3005-project
 
 
 
