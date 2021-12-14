@@ -24,10 +24,10 @@ module Owner
       puts "What is the year today?"
       year = gets.chomp
       con = @session_object_in.db_connection_open
-      sales = con.exec("SELECT SUM(price*num_sold) FROM book").values[0][0].to_i
-      cost = con.exec("SELECT SUM(cost*num_sold) FROM book").values[0][0].to_i
+      sales = con.exec("SELECT SUM(price*num_sold) FROM book").values[0][0].to_f
+      cost = con.exec("SELECT SUM(cost*num_sold) FROM book").values[0][0].to_f
 
-      result = "You generated $" + sales.to_s + " which cost you $" + cost.to_s + " representing a profit of $" + (sales-cost ).to_s
+      result = "You generated $" + sales.to_s + " which cost you $" + cost.to_s + " representing a profit of $" + (sales-cost).round(2).to_s
 
       get_owner_statement = "SELECT o_id FROM owner WHERE username=$1 AND password=$2"
       response = con.exec_params(get_owner_statement, [@login_session[:username], @login_session[:password]])
