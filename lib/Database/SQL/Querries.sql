@@ -167,11 +167,141 @@ SELECT title, price
       JOIN book ON book.isbn = cart_books.isbn
       WHERE order_number = $1
 
-
-
 --------------------------------------- FROM SearchForBooksQueries.rb ---------------------------------------
 
 -- The main query in this file is very complicated, as it cases, branches, and has 3 subqueries which
 -- all branch off on conditions which I cannot express in pure .sql
 -- I am going to skip porting that one into this file as it would not be able to format correctly
 -- please go visit the file defined above to see the details of this query and its flow of logic.
+
+--------------------------------------- FROM AddBookQueries.rb ---------------------------------------
+
+-- Gets all publishers and their names 
+SELECT p_id, publisher_email.name
+      FROM publisher
+      JOIN publisher_email ON publisher.email_address = publisher_email.email_address
+
+--------------------------------------- FROM AddBook.rb ---------------------------------------
+
+-- Checks if a given publisher name can be added, as names must be unique. If it returns a 0 count, there are no other
+-- publishers with that given name, and is thus unique so that name can be used for a new publisher
+SELECT COUNT(*) 
+      FROM publisher_email 
+      WHERE name = $1
+
+-- Checks if a given publisher email can be added, as emails must be unique. If it returns a 0 count, there are no other
+-- publishers with that given email, and is thus unique so that name can be used for a new publisher
+SELECT COUNT(*)
+      FROM publisher_email
+      WHERE email_address = $1
+
+-- Checks if a given publisher bank number can be added, as bank numbers must be unique. If it returns a 0 count, there are no other
+-- publishers with that given bank number, and is thus unique so that bank number can be used for a new publisher
+SELECT COUNT(*)
+      FROM publisher_bank
+      WHERE bank_account = $1
+
+-- Checks if a given postal code can be added, as postal code must be unique. If it returns a 0 count, there are no identical
+-- postal codes, and is thus unique so that a new one can be created out of it
+SELECT COUNT(*)
+      FROM region
+      WHERE postal_code=$1
+
+-- Checks if a given author email can be added, as author emails must be unique. If it returns a 0 count, there are no identical
+-- author emails, and is thus unique so that a new one can be created out of it
+SELECT COUNT(*)
+      FROM author_email
+      WHERE email_address=$1
+
+-- This is used to get the latest address_id that was added to the database. We recognize this is not ideal in a system with many users using this at once
+-- more on that in the report.
+SELECT address_id 
+      FROM address 
+      ORDER BY address_id
+      DESC LIMIT 1
+
+-- Used to get the latest p_id (publisher ID) that was added to the DB
+SELECT p_id 
+      FROM publisher 
+      ORDER BY p_id 
+      DESC LIMIT 1
+
+-- Used to check if an ISBN is already in our database. Since ISBNs must be unique, if the count is not 0, that means the ISBN already exists
+-- so we cannot add another ISBN with that name
+SELECT COUNT(*)
+      FROM book 
+      WHERE isbn = $1
+
+-- Used to check if a book title is already in the database. Titles must be unique, so if this returns a number that is not 0, the title already exists
+-- and thus we prevent another book with the same title being added
+SELECT COUNT(*)
+      FROM book
+      WHERE title = $1
+
+-- Get author IDs and their names
+SELECT a_id, author_email.first_name, author_email.last_name 
+      FROM author 
+      JOIN author_email ON author.email_address = author_email.email_address
+
+-- Used to get the latest author ID that was added to the database
+SELECT a_id
+      FROM author 
+      ORDER BY a_id 
+      DESC LIMIT 1
+
+--------------------------------------- FROM FulfillOrdersQueries.rb ---------------------------------------
+
+-- Gets an order numbers for a given order status
+SELECT order_number 
+      FROM orders 
+      WHERE status=$1
+
+--------------------------------------- FROM FulfillOrders.rb ---------------------------------------
+
+-- Select the owner ID of the owner with the given username and password
+SELECT o_id
+      FROM owner
+      WHERE username=$1 AND password=$2
+
+--------------------------------------- FROM GenerateReports.rb ---------------------------------------
+
+-- Get the sum of sales (price * num_sold) for all books
+SELECT SUM(price*num_sold)
+      FROM book
+
+-- Get the sum of the cost (cost * num_sold) for all books
+SELECT SUM(cost*num_sold) 
+      FROM book
+
+-- Select the owner ID of the owner with the given username and password
+SELECT o_id
+      FROM owner
+      WHERE username=$1 AND password=$2
+
+-- Get the total sales for each authopr
+SELECT author_email.first_name, author_email.last_name, 
+      SUM(price*num_sold) 
+      FROM book
+      JOIN author_books 
+      ON book.isbn = author_books.isbn
+      JOIN author 
+      ON author_books.a_id = author.a_id
+      JOIN author_email
+      ON author.email_address = author_email.email_address
+      GROUP BY author_email.first_name, author_email.last_name
+
+-- Get the total sales grouped by genre
+SELECT genre, SUM(price*num_sold)
+      FROM book
+      GROUP BY genre
+
+--------------------------------------- FROM RemoveBook.rb ---------------------------------------
+
+-- Get the isbn and title for all books
+SELECT isbn, title
+      FROM book
+
+-- Check if a given ISBN exists in our database. If count = 0, that ISBN does not exist in our DB.
+SELECT COUNT(*) 
+      FROM book
+      WHERE isbn = $1

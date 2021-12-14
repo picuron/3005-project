@@ -1,7 +1,7 @@
 # Book Store Project COMP3005 FALL 2021
 Joshua Kline - 101125043
 
-Eric Herscovich - 
+Eric Herscovich - 101196704
 
 # Conceptual Design
 

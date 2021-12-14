@@ -93,3 +93,18 @@ UPDATE book
 
 -- removes a book from a cart based on cart id and isbn
 DELETE FROM cart_books WHERE isbn =$1 AND cart_id=$2
+
+--------------------------------------- FROM FulfillOrdersQueries.rb ---------------------------------------
+
+-- Updates an order when it is SHIPPED. Assigns the status, the owner that shipped it, location it's in.
+UPDATE orders SET status = $1, o_id = $2, cl_city = $3, cl_country = $4 WHERE order_number = $
+
+--------------------------------------- FROM GenerateReports.rb ---------------------------------------
+
+-- Adds a new report into the reports table once generated
+INSERT INTO reports (o_id, day, month, year, report_type, result) VALUES ($1, $2, $3, $4, $5, $6)
+
+--------------------------------------- FROM RemoveBook.rb ---------------------------------------
+
+-- Deletes a book from a DB given an ISBN
+DELETE FROM book WHERE isbn = $1
