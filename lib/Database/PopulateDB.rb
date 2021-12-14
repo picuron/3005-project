@@ -168,7 +168,7 @@ module Database
       price = (rand() * 100).round(2)
       cost = price * ((rand(50..90).to_f)/100)
       num_in_stock = rand(10..100)
-      num_sold = 0
+      num_sold = rand(0..100)
 
       publisher_id = get_random_publisher
 

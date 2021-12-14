@@ -142,7 +142,7 @@ CREATE TABLE reports
     month          SMALLINT NOT NULL CHECK (month > 0 and month < 13),
     year           SMALLINT NOT NULL CHECK (year > 1500 and year < 2022),
     report_type    VARCHAR(50) NOT NULL,
-    result         VARCHAR(200) NOT NULL,
+    result         VARCHAR(5000) NOT NULL,
     PRIMARY KEY (r_id),
     FOREIGN KEY (o_id) REFERENCES owner
     ON DELETE SET NULL
