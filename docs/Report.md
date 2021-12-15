@@ -1405,7 +1405,7 @@ The owner side of this program is meant to handle all administrative/owner stuff
 
 ![client_or_owner](./photos/client_or_owner.png)
 
-Selecting O, you will be then be prompted to login. Only users that are owners can log in. So, you must have an account in the owner table. If a normal user tries to login, they will be rejected, given an incorrect password screen. By default, we have an owner login set up to be used.
+Selecting O, you will then be prompted to login. Only users that are owners can log in. So, you must have an account in the owner table. If a normal user tries to login, they will be rejected and given an incorrect password screen. By default, we have an owner login set up to be used.
 
 ![owner_login](./photos/owner_login.png)
 
@@ -1415,13 +1415,13 @@ This is an example of entering an invalid username or password:
 After you successfully log in as an owner, you will be greeted with the menu from the OwnerController giving you all the available actions:
 ![owner_menu](./photos/owner_menu.png)
 
-Entering 1 will exit the program, and entering 2 will bring you back to the menu where you select if you want to go into the client or owner menu. To demo the next other steps, I will only be showing the 'happy path'. That is, I will not be showing any error trapping or validation, as that would drastically increase the size of this document. But, error trapping is built in throughout all the inputs. There is prepared statements for all areas where input is requested, and when a value must be unique, we do a check to ensure the value is unique. I will demo this once below, but will not show this every single time it is happening. 
+Entering 1 will exit the program, and entering 2 will bring you back to the menu where you select if you want to go into the client or owner menu. To demo the other options, I will only be showing the 'happy path'. That is, I will not be showing any error trapping or validation, as that would drastically increase the size of this document. But, error trapping is built in throughout all the inputs. There is prepared statements for all areas where input is requested, and when a value must be unique, we do a check to ensure the value is unique. I will demo this once below, but will not show this every single time it is happening. 
 
 When we select 3, to fulfill orders, we are taken to the fulfill orders menu. This allows you to exit the program, exit to the owner menu, or view the first 5 unfulfilled orders (we are applying pagination). The beauty with passing state throughout the program, and splitting everything into its own modules and components, is that it makes it very easy for us to seamlessly allow a user to exit a workflow at any point and go back to the controller, while passing the context back and forth, like their login so they won't have to log in again.
 
 ![fulfill_orders_menu](./photos/fulfill_orders_menu.png)
 
-After hitting 3 again, we will see the first 5 unfulfilled orders. We can hit 2 to see the last 5, or we can hit 3 to see the next 5 orders. This number can also be easily changed. The benefit with pagination, is if we have hundreds of orders, they won't flood the screen. For the pagination, we are eager-loading the data. Instead of querying for the next or last 5 each time the user selects go forward or backwards, all of the unfulfilled orders are queried for at once, and stored, and the pagination is being done by the code, and essentially just moving to a different index in an array of the unfulfilled orders. This solution would not be ideal on a large scale system though. If you have tons of orders coming in at once, and thousands of unfulfilled orders, it would be inefficient to store everything in an array, and also as more and more orders come in, we won't see them until we hit the last menu again, triggering a new query. But, in our specific case here, where we do not need to worry about orders being ingested concurrently as we are fulfilling, this solution works fine.
+After hitting 3 again, we will see the first 5 unfulfilled orders. We can hit 2 to see the last 5, or we can hit 3 to see the next 5 orders. This number can also be easily changed. The benefit with pagination, is if we have hundreds of orders, they won't flood the screen. For the pagination, we are eager-loading the data. Instead of querying for the next or last 5 each time the user selects go forward or backwards, all of the unfulfilled orders are queried for at once, and stored. The pagination is being done by the code, and essentially just moving to a different index in an array of the unfulfilled orders. This solution would not be ideal on a large scale system though. If you have tons of orders coming in at once, and thousands of unfulfilled orders, it would be inefficient to store everything in an array. Also as more and more orders come in, we won't see them until we hit the last menu again, triggering a new query. But, in our specific case here, where we do not need to worry about orders being ingested concurrently as we are fulfilling, this solution works fine.
 
 ![fulfilling_orders](./photos/fulfilling_orders.png)
 
@@ -1474,7 +1474,7 @@ The last functionality of the owner is to generate reports, which you do by hitt
 
 ![report_menu](./photos/report_menu.png)
 
-You have the option to see Sales VS Cost, Sales by Author, and Sales by Author. I will demonstrate the Sales by Author report, which you can select by entering 4. As explained above, we did not implement a date capturing feature correctly, so we have to unfortunately prompt the user for the current date, which is stored by the database for when it creates a new Report row.
+You have the option to see Sales VS Cost, Sales by Author, and Sales by Genre. I will demonstrate the Sales by Author report, which you can select by entering 4. As explained above, we did not implement a date capturing feature correctly, so we have to unfortunately prompt the user for the current date, which is stored by the database for when it creates a new Report row.
 
 ![report_output](./photos/report_output.png)
 
