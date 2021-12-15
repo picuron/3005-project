@@ -1350,7 +1350,7 @@ This is a small sample section of the feedback that is printed to console when t
 ![initialize](./photos/client_or_owner.png)
 Next you are prompted to enter as either a client or an owner. We will first see the Client side of things, and later the owner side. 
 
-### The Client Side
+# The Client Side
 
 ![initialize](./photos/client_welcome.png)
 Upon pressing 'C', you will be brought to the stores main page. Here you have a number of options of things to do. 1 will quit the program all together. 2 will bring you back to the client / owner menu you saw in the previous section, and the other 4 options we will explore in more detail. Currently, since we only just entered the applicaiton, we do not have a cart, and we do not have any checkouts (because we have not yet signed in) 
@@ -1428,13 +1428,86 @@ Provide all the info and we are good to go. We will then be asked to provide the
 ![initialize](./photos/reg_post.png)
 We can also see if we query in pgAdmin that ouur new user has been generated, and all 3 phone numbers have been stored. 
 
-### The Owner Side
+# The Owner Side
 
+The owner side of this program is meant to handle all administrative/owner stuff. You can add books, remove them, fulfill orders, and view reports. To enter the Owner side, you start in the BookStoreController, where it asks you if you want to proceed as a client or owner:
 
+![client_or_owner](./photos/client_or_owner.png)
 
+Selecting O, you will then be prompted to login. Only users that are owners can log in. So, you must have an account in the owner table. If a normal user tries to login, they will be rejected and given an incorrect password screen. By default, we have an owner login set up to be used.
 
+![owner_login](./photos/owner_login.png)
 
+This is an example of entering an invalid username or password:
+![incorrect_owner_login](./photos/incorrect_owner_login.png)
 
+After you successfully log in as an owner, you will be greeted with the menu from the OwnerController giving you all the available actions:
+![owner_menu](./photos/owner_menu.png)
+
+Entering 1 will exit the program, and entering 2 will bring you back to the menu where you select if you want to go into the client or owner menu. To demo the other options, I will only be showing the 'happy path'. That is, I will not be showing any error trapping or validation, as that would drastically increase the size of this document. But, error trapping is built in throughout all the inputs. There is prepared statements for all areas where input is requested, and when a value must be unique, we do a check to ensure the value is unique. I will demo this once below, but will not show this every single time it is happening. 
+
+When we select 3, to fulfill orders, we are taken to the fulfill orders menu. This allows you to exit the program, exit to the owner menu, or view the first 5 unfulfilled orders (we are applying pagination). The beauty with passing state throughout the program, and splitting everything into its own modules and components, is that it makes it very easy for us to seamlessly allow a user to exit a workflow at any point and go back to the controller, while passing the context back and forth, like their login so they won't have to log in again.
+
+![fulfill_orders_menu](./photos/fulfill_orders_menu.png)
+
+After hitting 3 again, we will see the first 5 unfulfilled orders. We can hit 2 to see the last 5, or we can hit 3 to see the next 5 orders. This number can also be easily changed. The benefit with pagination, is if we have hundreds of orders, they won't flood the screen. For the pagination, we are eager-loading the data. Instead of querying for the next or last 5 each time the user selects go forward or backwards, all of the unfulfilled orders are queried for at once, and stored. The pagination is being done by the code, and essentially just moving to a different index in an array of the unfulfilled orders. This solution would not be ideal on a large scale system though. If you have tons of orders coming in at once, and thousands of unfulfilled orders, it would be inefficient to store everything in an array. Also as more and more orders come in, we won't see them until we hit the last menu again, triggering a new query. But, in our specific case here, where we do not need to worry about orders being ingested concurrently as we are fulfilling, this solution works fine.
+
+![fulfilling_orders](./photos/fulfilling_orders.png)
+
+After you hit one, you will be prompted to enter an order number:
+
+![enter_order_number](./photos/enter_order_number.png)
+
+ If you enter an invalid order number, this will be trapped and you will be given the option to see the unfulfilled orders again, or try again:
+
+ ![invalid_order_number](./photos/invalid_order_number.png)
+
+ Once you enter a valid order number, the order will be 'fulfilled'. You can see the before and after state of Order 3 below, before and after getting 'fulfilled':
+
+![unfulfilled_sql](./photos/unfulfilled_sql.png)
+![fulfilled_sql](./photos/fulfilled_sql.png)
+
+Note in the above, you can see an o_id was assigned, as this is the owner who fulfilled it, as well as a city, country and the status was updated to 'SHIPPED'. After you fulfull an order, you are prompted to either fulfill another order, or exit to the menu:
+
+![post_fulfillment_menu](./photos/post_fulfillment_menu.png)
+
+Next, when we are back in the OwnerController menu, we can hit 4 in order to add a new book. This is a long process... You need to first add, or pick an existing publisher, then create or add authors, then create the actual book. The first thing you see when you enter this menu is a list of publishers, and you will be asked if your publisher is listed. If it is, you will be asked for their ID, and the publisher's ID will be assigned to that book. If it is not, you will be prompted to create a new publisher.
+
+![publisher_menu](./photos/publisher_menu.png)
+
+For the sake of demoing, I will show the flow for wehen a publisher was not listed. One thing to note in the below screenshot, is that the user is prompted to keep entering phone numbers until they say they are done. This is because publishers can have as many phone numbers as they want.
+
+![creating_publisher](./photos/creating_publisher.png)
+
+Next, you are prompted to create the book. Note that error checking is occuring to ensure that ISBN and title are unique, and you will be prompted to enter a different value if it is not unique.
+
+![adding_book](./photos/adding_book.png)
+
+Next, you will be prompted to add an author. This is the same as adding a publisher. You see all the existing ones, and if the author already exists, you will add select their ID, and if they don't, then you will be prompted to create a new one. I will select a known author.
+
+![select_author](./photos/select_author.png)
+
+Next, since a book can have any number of authors, you will be asked if you want another. In this case, you will be prompted to either enter an existing ID, or create a new author. Once you are done adding authors, you can select 2, which is no, and then you will see the book is successfully added, you will be prompted to hit enter to continue, then you will be returned back to the owner menu.
+
+![select_author](./photos/add_another_author.png)
+
+The next thing we can do as an owner, is remove a book. This workflow is relatively straightforward. You are given a list of books, and you are asked which book you would like to remove. 
+
+![owner_remove_book](./photos/owner_remove_book.png)
+
+If you enter an invalid ISBN, that will be captured. Once you enter a valid ISBN, you get a message that it has been removed, and you are prompted to hit enter to continue.
+
+![removing_book](./photos/removing_book.png)
+
+The last functionality of the owner is to generate reports, which you do by hitting 6 in the owner menu. Once you do, you will see the report menu:
+
+![report_menu](./photos/report_menu.png)
+
+You have the option to see Sales VS Cost, Sales by Author, and Sales by Genre. I will demonstrate the Sales by Author report, which you can select by entering 4. As explained above, we did not implement a date capturing feature correctly, so we have to unfortunately prompt the user for the current date, which is stored by the database for when it creates a new Report row.
+
+![report_output](./photos/report_output.png)
+
+And that's it from the owner section!
 # Bonus Features
 
 * When searching for a book by title, author, genre, or publisher, we perform an approximate search. To do this, we return the 5 results who's attribute's string requires the fewest insertion, deletions, or replacements of any given character to comprise the desired search string. This does a decent job at behaving like an approximation engine, though the short coming is in searching for small strings. For example, if you search for "t" in book titles, even if there is one book called "ttt" and another called "z", "z" will return with higher priority since it only requires 1 replacement, whereas "ttt" requires 2 deletions. If the search string is around the average length of the availible string to compare against, and the search strings actually contains some valid sequeence of characters, it performs decently well. For the ISBN approximation, we instead compare the absolute difference between the search ISBN and those on record.
