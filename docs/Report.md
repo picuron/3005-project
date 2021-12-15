@@ -1292,7 +1292,7 @@ lib
 ├ Owner
 └ HelperLib
 ```
-The application starts in Bookstore.rb, which simply instantiates a BookStoreController. Inside this controller, we do 4 ththithingsngsings. 
+The application starts in Bookstore.rb, which simply instantiates a BookStoreController. Inside this controller, we do 4 things. 
 1) Prompt the user to connect to the db
 2) Prompt the user to either instantiate the DB with new values, or continue using it with previous data
 3) Wipe and auto populate the DB if required
@@ -1441,7 +1441,7 @@ We can also see if we query in pgAdmin that ouur new user has been generated, an
 
 * We show similar books when searching by any given parameter. You will always return the top 5 matches, assuming there are 5, for any given search.
 
-* We implemented a sense of "state" throughout the client side of the aplication. Once you go to checkout for the first time, you will be promted to either sign in or create a new account. After doing so, your credentials will be stored such that you can navigate around the store in any direction you want, and when it comes time to checkout again, you will not need to provide your information for  a second time. We keep track of the logged in users credentials, the connection point to the database stored on the hostss computer, and the cart currently in action through out the alication. 
+* We implemented a sense of "state" throughout the client side of the aplication. Once you go to checkout for the first time, you will be promted to either sign in or create a new account. After doing so, your credentials will be stored such that you can navigate around the store in any direction you want, and when it comes time to checkout again, you will not need to provide your information for  a second time. We keep track of the logged in users credentials, the connection point to the database stored on the hostss computer, and the cart currently in action through out the application. 
 
 * Rather then displaying a single Order at a time given an input order number, we designed the application to all of the previous reports, including their dates, total prices, current location, and fulfilment status. This is more akin to a real e-commerce store where you can view and scroll through all of your past purchasses. 
 
