@@ -1534,12 +1534,12 @@ https://github.com/picuron/3005-project
 
 # Appendix I
 
-Availibility on Dec 18th For presentation
+Availibility on Dec 20th For presentation
 * 11:00 am - 11:20 am
 * 12:00 pm - 12:20 pm
 * 12:40 pm - 1:00 pm
 
-
+If none of these time works, we are flexible. Can essentially do anytime EXCEPT 1:30-2 and 3-3:30.
 
 
 
